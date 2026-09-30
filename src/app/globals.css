@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/*
+ * Theme tokens. Raw colour values live ONLY in src/config/brand.ts; the root
+ * layout writes them to --brand-* custom properties on <html>. Tailwind's
+ * default palette is removed so off-brand colours cannot creep in.
+ */
+@theme inline {
+  --color-*: initial;
+  --color-white: #fff;
+  --color-ink: var(--brand-ink);
+  --color-accent: var(--brand-accent);
+  --color-paper: var(--brand-paper);
+  --color-detail: var(--brand-detail);
+  --color-body: var(--brand-body);
+  /* Derived tints, never new hues */
+  --color-paper-soft: color-mix(in oklab, var(--brand-paper) 55%, white);
+  --color-paper-deep: color-mix(in oklab, var(--brand-paper) 90%, var(--brand-detail));
+  --color-ink-soft: color-mix(in oklab, var(--brand-ink) 88%, white);
+  --color-line: color-mix(in oklab, var(--brand-accent) 70%, var(--brand-paper));
+  /* Functional state colour (not brand). 7:1 on paper. */
+  --color-danger: #8a2323;
+
+  --font-script: var(--ff-script), cursive;
+  --font-display: var(--ff-display), Georgia, serif;
+  --font-sans: var(--ff-sans), system-ui, sans-serif;
+
+  --breakpoint-xs: 26rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 400;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  /* Fieldsets default to min-content width, which lets wide children (date strips) widen the page. */
+  fieldset {
+    min-inline-size: 0;
+  }
+  /* 16px minimum stops iOS Safari zooming on focus */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  .on-ink :focus-visible {
+    outline-color: var(--color-paper);
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: max(1rem, env(safe-area-inset-left));
+  }
+  @media (min-width: 48rem) {
+    .container-x {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 64rem) {
+    .container-x {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Small letter-spaced label. 12px floor for legibility. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* Hatched stand-in for missing artwork (engravings, photos). Zero bytes. */
+  .hatch {
+    background-color: var(--color-paper-deep);
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-accent) 45%, transparent) 0 1px,
+      transparent 1px 9px
+    );
+  }
+  .hatch-ink {
+    background-color: var(--color-ink-soft);
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--color-accent) 40%, transparent) 0 1px,
+      transparent 1px 9px
+    );
+  }
+
+  .scroll-row {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
