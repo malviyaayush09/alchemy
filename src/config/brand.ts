@@ -48,6 +48,14 @@ export const brand = {
     body: "#4B4B4B",
   } satisfies BrandColors,
 
+  /** Sister brand (same owner). Shown on About. Set to null to remove the section. */
+  family: {
+    name: "Marseli Café Patisserie",
+    shortName: "Marseli",
+    founder: "Chef Suresh Kumar M",
+    storyUrl: "https://marselicafe.com/story",
+  } as null | { name: string; shortName: string; founder: string; storyUrl: string },
+
   delivery: {
     area: "HSR Layout",
     city: "Bengaluru",

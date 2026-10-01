@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { brand, deliveryAreaLabel } from "@/config/brand";
-import { about } from "@/content/about";
+import { about, family } from "@/content/about";
 import { Artwork } from "@/components/brand/Artwork";
 import { GinkgoMark } from "@/components/brand/GinkgoMark";
 import { GoldRule } from "@/components/brand/GoldRule";
@@ -23,6 +23,46 @@ export default function AboutPage() {
           <p className="mx-auto mt-5 max-w-xl font-display text-[1.25rem] italic text-paper/85">{about.intro}</p>
         </div>
       </section>
+
+      {family ? (
+        <section aria-labelledby="family-title" className="border-b border-line">
+          <div className="container-x py-14 lg:py-20">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16">
+              <div>
+                <p className="eyebrow text-body">{family.eyebrow}</p>
+                <h2 id="family-title" className="mt-2 text-[2rem] leading-tight lg:text-[2.5rem]">
+                  {family.title}
+                </h2>
+                <div className="mt-4 max-w-xl space-y-4 text-[1rem] text-body">
+                  {family.body.map((p) => (
+                    <p key={p}>{p}</p>
+                  ))}
+                </div>
+                <a
+                  href={family.link.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="mt-5 inline-flex min-h-11 items-center gap-2 text-[0.8125rem] font-medium tracking-[0.14em] text-ink uppercase underline decoration-accent underline-offset-[6px]"
+                >
+                  {family.link.label}
+                  <span aria-hidden="true">↗</span>
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              </div>
+              <ol className="relative space-y-6 border-l border-line pl-6 lg:self-center">
+                {family.beats.map((b, i) => (
+                  <li key={b.title} className="relative">
+                    <span aria-hidden="true" className="absolute top-1.5 -left-[1.95rem] size-3 rounded-full border border-accent bg-paper" />
+                    <p className="eyebrow text-body">{["I", "II", "III"][i]}</p>
+                    <h3 className="mt-1 text-[1.5rem]">{b.title}</h3>
+                    <p className="mt-1 text-[0.9375rem] text-body">{b.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {about.sections.map((s, i) => (
         <section key={s.id} aria-labelledby={`${s.id}-title`} className={i % 2 ? "bg-paper-soft" : ""}>

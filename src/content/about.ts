@@ -4,6 +4,28 @@ import { brand } from "@/config/brand";
  * Brand story, adapted from the client's storyboard ("alchemy story board.pdf").
  * Keep it free of ingredient, sourcing, allergen or health claims.
  */
+/**
+ * Sister-brand lineage (same owner as the brand in config). Original wording:
+ * do not paste text from the sister brand's site, and keep it free of
+ * ingredient claims about either kitchen.
+ */
+export const family = brand.family
+  ? {
+      eyebrow: `From the house of ${brand.family.shortName}`,
+      title: `A sister to ${brand.family.name}.`,
+      body: [
+        `${brand.shortName} comes from the same family as ${brand.family.name}, and shares its founder, ${brand.family.founder}.`,
+        `${brand.family.shortName} is named for the mentor who taught him that good food can't be hurried: give every step the time it asks for, and let the ingredients lead. ${brand.shortName} takes that lesson and gives it to a single craft: the cake.`,
+      ],
+      beats: [
+        { title: "The mentor", body: `Learning beside Chef ${brand.family.shortName}, in a kitchen where patience came before everything.` },
+        { title: "The café", body: `${brand.family.name}, built as a tribute to that way of working.` },
+        { title: "The patisserie", body: `${brand.shortName}: the same care, given entirely to made-to-order cakes.` },
+      ],
+      link: { href: brand.family.storyUrl, label: `Read the ${brand.family.shortName} story` },
+    }
+  : null;
+
 export const about = {
   eyebrow: "Our story",
   title: brand.belief,
