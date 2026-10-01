@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { defaultSettings, fallbackProducts, fallbackTags } from "@/data/catalog";
 import { db, must } from "./db";
@@ -48,30 +49,39 @@ export function mapProduct(r: ProductRow): Product {
   };
 }
 
+/**
+ * Catalogue reads are cached across requests (tag "catalog") so storefront
+ * pages don't wait on the database. Admin saves call updateTag("catalog").
+ */
+export const CATALOG_TAG = "catalog";
+const cached = <A extends unknown[], R>(fn: (...a: A) => Promise<R>, key: string) => unstable_cache(fn, [key], { tags: [CATALOG_TAG], revalidate: 300 });
+
+const fetchProducts = cached(async (includeInactive: boolean): Promise<Product[]> => {
+  let q = db().from("products").select(PRODUCT_SELECT).order("sort_order").order("name");
+  if (!includeInactive) q = q.eq("is_active", true);
+  const rows = must(await q, "getProducts") as unknown as ProductRow[];
+  return rows.map(mapProduct);
+}, "products");
+
 /** Active products for the storefront, sorted for "Featured". */
 export const getProducts = cache(async (opts: { includeInactive?: boolean } = {}): Promise<Product[]> => {
   if (!isDbConfigured()) return fallbackProducts;
-  let q = db().from("products").select(PRODUCT_SELECT).order("sort_order").order("name");
-  if (!opts.includeInactive) q = q.eq("is_active", true);
-  const rows = must(await q, "getProducts") as unknown as ProductRow[];
-  return rows.map(mapProduct);
+  return fetchProducts(Boolean(opts.includeInactive));
 });
 
 export const getProductBySlug = cache(async (slug: string): Promise<Product | null> => {
   if (!isDbConfigured()) return fallbackProducts.find((p) => p.slug === slug) ?? null;
-  const res = await db().from("products").select(PRODUCT_SELECT).eq("slug", slug).eq("is_active", true).maybeSingle();
-  if (res.error) throw new Error(`getProductBySlug: ${res.error.message}`);
-  return res.data ? mapProduct(res.data as unknown as ProductRow) : null;
+  return (await getProducts()).find((p) => p.slug === slug) ?? null;
 });
 
-export const getTags = cache(async (): Promise<Tag[]> => {
-  if (!isDbConfigured()) return fallbackTags;
+const fetchTags = cached(async (): Promise<Tag[]> => {
   const rows = must(await db().from("tags").select("id, slug, label, sort_order").order("sort_order"), "getTags");
   return rows.map((t) => ({ id: t.id, slug: t.slug, label: t.label, sortOrder: t.sort_order }));
-});
+}, "tags");
 
-export const getSettings = cache(async (): Promise<StoreSettings> => {
-  if (!isDbConfigured()) return defaultSettings;
+export const getTags = cache(async (): Promise<Tag[]> => (isDbConfigured() ? fetchTags() : fallbackTags));
+
+const fetchSettings = cached(async (): Promise<StoreSettings> => {
   const r = must(await db().from("store_settings").select("*").eq("id", 1).single(), "getSettings");
   return {
     cakeMessageMaxChars: r.cake_message_max_chars,
@@ -84,6 +94,8 @@ export const getSettings = cache(async (): Promise<StoreSettings> => {
     pricesIncludeGst: r.prices_include_gst,
     hsnCode: r.hsn_code,
   };
-});
+}, "settings");
+
+export const getSettings = cache(async (): Promise<StoreSettings> => (isDbConfigured() ? fetchSettings() : defaultSettings));
 
 export const tagLabel = (tags: Tag[], slug: string) => tags.find((t) => t.slug === slug)?.label ?? slug;

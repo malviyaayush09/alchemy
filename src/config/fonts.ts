@@ -9,19 +9,24 @@ export const fontScript = Allura({
   subsets: ["latin"],
   weight: "400",
   display: "swap",
+  // Not preloaded: only the logo/hero use it, and preloads compete with the LCP image on slow 4G.
+  preload: false,
   variable: "--ff-script",
 });
 
 export const fontDisplay = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: "400",
   style: ["normal", "italic"],
   display: "swap",
+  preload: false,
   variable: "--ff-display",
 });
 
 export const fontSans = Montserrat({
   subsets: ["latin"],
+  // Only the two weights the design uses (smaller than the full 100–900 variable file).
+  weight: ["400", "500"],
   display: "swap",
   variable: "--ff-sans",
 });

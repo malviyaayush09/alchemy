@@ -19,12 +19,15 @@ export function Logo({ tone = "ink", size = "md", showSubline = false, asLink = 
   const color = tone === "ink" ? "text-ink" : "text-paper";
 
   const content = brand.logo.image ? (
-    <Image src={brand.logo.image.src} width={brand.logo.image.width} height={brand.logo.image.height} alt={brand.name} priority />
+    <Image src={brand.logo.image.src} width={brand.logo.image.width} height={brand.logo.image.height} alt={brand.name} preload />
   ) : (
     <span className={`inline-flex items-center gap-2 ${color}`}>
       <GinkgoMark className={`${markSize[size]} shrink-0 text-accent`} />
       <span className="flex flex-col leading-none">
-        <span className={`font-script ${wordmarkSize[size]} leading-[1.1]`}>{brand.logo.wordmark}</span>
+        <span className={`font-script ${wordmarkSize[size]} leading-[1.1]`}>
+          {brand.logo.wordmark}
+          {!showSubline ? <span className="sr-only"> {brand.logo.subline}</span> : null}
+        </span>
         {showSubline ? (
           <span className="eyebrow mt-0.5 !text-[0.625rem] !tracking-[0.42em] text-accent">{brand.logo.subline}</span>
         ) : null}
@@ -34,8 +37,9 @@ export function Logo({ tone = "ink", size = "md", showSubline = false, asLink = 
 
   if (!asLink) return <span className={className}>{content}</span>;
   return (
-    <Link href="/" aria-label={`${brand.name}, home`} className={`inline-flex min-h-11 items-center ${className}`}>
+    <Link href="/" className={`inline-flex min-h-11 items-center ${className}`}>
       {content}
+      <span className="sr-only">, home</span>
     </Link>
   );
 }

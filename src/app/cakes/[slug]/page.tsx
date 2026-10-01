@@ -81,7 +81,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         <div>
           <div className="relative aspect-[4/5] overflow-hidden border border-line bg-paper-soft">
             {main ? (
-              <Image src={main.src} alt={main.alt || product.name} fill priority sizes="(min-width: 1216px) 560px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
+              <Image src={main.src} alt={main.alt || product.name} fill preload fetchPriority="high" sizes="(min-width: 1216px) 560px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
             ) : (
               <Artwork label={`Photo · ${product.name}`} shape="rect" className="size-full border-0" />
             )}

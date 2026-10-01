@@ -1,10 +1,11 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { after } from "next/server";
 import { notFound, redirect } from "next/navigation";
 import { currentUser, isStaff, type User } from "@/lib/auth/session";
+import { CATALOG_TAG } from "@/lib/catalog";
 import { db } from "@/lib/db";
 import { imageSize } from "@/lib/image-size";
 import { notifyOrderStatus } from "@/lib/notify";
@@ -23,6 +24,7 @@ async function requireStaff(): Promise<User> {
 
 /** Storefront pages that show catalogue data. */
 function refreshStorefront() {
+  updateTag(CATALOG_TAG); // drop cached catalogue/settings immediately
   revalidatePath("/", "layout");
 }
 

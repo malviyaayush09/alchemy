@@ -1,8 +1,11 @@
 "use client";
 
-import { Analytics } from "@vercel/analytics/next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+// Loaded only after consent, so the analytics code never ships to visitors who decline.
+const Analytics = dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false });
 
 const KEY = "consent:analytics:v1";
 type Choice = "granted" | "denied" | null;

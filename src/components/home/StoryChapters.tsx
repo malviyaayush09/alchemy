@@ -19,7 +19,7 @@ export function StoryChapters() {
           <h2 id="story-title" className="mt-2 text-[2.25rem] leading-tight sm:text-[3rem]">
             {brand.storyLine}
           </h2>
-          <p className="mt-3 font-display text-[1.25rem] italic text-body">{brand.belief}</p>
+          <p className="mt-3 font-display text-[1.25rem] text-body">{brand.belief}</p>
         </header>
 
         <ol className="relative mx-auto mt-12 max-w-4xl lg:mt-16">

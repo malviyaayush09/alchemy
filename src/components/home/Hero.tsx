@@ -18,7 +18,6 @@ export function Hero() {
     width: heroImage.width,
     height: heroImage.height,
     sizes: "50vw",
-    priority: true,
   });
 
   return (

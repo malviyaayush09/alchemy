@@ -5,7 +5,7 @@ import { Artwork } from "@/components/brand/Artwork";
 import { Badge } from "@/components/ui/Badge";
 import { CardPurchase } from "./CardPurchase";
 
-type Props = { product: Product; priority?: boolean; sizes?: string };
+type Props = { product: Product; /** Above-the-fold cards: preload + high fetch priority (LCP on phones). */ priority?: boolean; sizes?: string };
 
 /** Boutique-counter card: gold hairline frame, diet badge, weight toggle, add to cart. */
 export function ProductCard({ product, priority = false, sizes = "(min-width: 1024px) 280px, (min-width: 640px) 33vw, 50vw" }: Props) {
@@ -22,7 +22,9 @@ export function ProductCard({ product, priority = false, sizes = "(min-width: 10
             alt=""
             fill
             sizes={sizes}
-            priority={priority}
+            preload={priority}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
             className="object-cover object-[50%_62%] transition-transform duration-500 hover:scale-[1.03]"
           />
         ) : (

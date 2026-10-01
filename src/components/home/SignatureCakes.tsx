@@ -23,9 +23,9 @@ export async function SignatureCakes() {
           </Link>
         </div>
         <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {featured.map((p) => (
+          {featured.map((p, i) => (
             <li key={p.slug} className="flex">
-              <ProductCard product={p} />
+              <ProductCard product={p} priority={i < 2} />
             </li>
           ))}
         </ul>

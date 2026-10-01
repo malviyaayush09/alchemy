@@ -3,7 +3,6 @@
 import { useId, useState } from "react";
 import { isPurchasable, weightLabel, type Variant } from "@/lib/types";
 import { PincodeChecker } from "@/components/cart/PincodeChecker";
-import { PincodeDialog } from "@/components/cart/PincodeDialog";
 import { useAddToCart } from "@/components/cart/useAddToCart";
 import { buttonClasses } from "@/components/ui/Button";
 import { Price } from "@/components/ui/Price";
@@ -35,7 +34,7 @@ export function ProductPurchase({ product, limits }: Props) {
   const [message, setMessage] = useState("");
   const [giftOn, setGiftOn] = useState(false);
   const [giftNote, setGiftNote] = useState("");
-  const { add, dialog } = useAddToCart();
+  const { add } = useAddToCart();
 
   const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0];
   if (!variant) return null;
@@ -133,7 +132,6 @@ export function ProductPurchase({ product, limits }: Props) {
         </button>
       </div>
 
-      <PincodeDialog {...dialog} />
     </div>
   );
 }

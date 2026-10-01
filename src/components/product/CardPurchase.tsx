@@ -2,7 +2,6 @@
 
 import { useId, useState } from "react";
 import { isPurchasable, weightLabel, type Variant } from "@/lib/types";
-import { PincodeDialog } from "@/components/cart/PincodeDialog";
 import { useAddToCart } from "@/components/cart/useAddToCart";
 import { buttonClasses } from "@/components/ui/Button";
 import { Price } from "@/components/ui/Price";
@@ -24,7 +23,7 @@ export function CardPurchase({ product }: Props) {
   const id = useId();
   const [variantId, setVariantId] = useState(product.variants[0]?.id);
   const variant = product.variants.find((v) => v.id === variantId) ?? product.variants[0];
-  const { add, dialog } = useAddToCart();
+  const { add } = useAddToCart();
   if (!variant) return null;
   const buyable = isPurchasable(product, variant);
 
@@ -79,7 +78,6 @@ export function CardPurchase({ product }: Props) {
           {product.name}, {weightLabel(variant.weightGrams)}
         </span>
       </button>
-      <PincodeDialog {...dialog} />
     </div>
   );
 }

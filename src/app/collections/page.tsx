@@ -89,6 +89,7 @@ export default async function CollectionsPage({ searchParams }: { searchParams: 
             </p>
             <SortSelect value={sort} tag={active.tag} />
           </div>
+          <h2 className="sr-only">{active.tag ? `${active.label} cakes` : "All cakes"}</h2>
           {list.length ? (
             <ul className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4 xl:gap-5">
               {list.map((p, i) => (

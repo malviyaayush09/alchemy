@@ -7,7 +7,7 @@ import { MobileMenu } from "./MobileMenu";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur-sm supports-[not(backdrop-filter:blur(1px))]:bg-paper">
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
       <div className="container-x flex h-16 items-center gap-2 lg:h-[4.5rem]">
         <MobileMenu />
         <span className="lg:hidden">

@@ -1,6 +1,17 @@
 @import "tailwindcss";
 
 /*
+ * The ₹ sign lives in Montserrat's "latin-ext" file (67 KB). Drawing just that
+ * one glyph from an installed system font avoids downloading the whole file
+ * on every page that shows a price. unicode-range limits this face to U+20B9.
+ */
+@font-face {
+  font-family: "Rupee Sign";
+  src: local("Roboto"), local("Segoe UI"), local("Arial"), local("Helvetica Neue"), local("Helvetica");
+  unicode-range: U+20B9;
+}
+
+/*
  * Theme tokens. Raw colour values live ONLY in src/config/brand.ts; the root
  * layout writes them to --brand-* custom properties on <html>. Tailwind's
  * default palette is removed so off-brand colours cannot creep in.
@@ -23,7 +34,7 @@
 
   --font-script: var(--ff-script), cursive;
   --font-display: var(--ff-display), Georgia, serif;
-  --font-sans: var(--ff-sans), system-ui, sans-serif;
+  --font-sans: "Rupee Sign", var(--ff-sans), system-ui, sans-serif;
 
   --breakpoint-xs: 26rem;
 }
@@ -55,6 +66,11 @@
   }
   p {
     text-wrap: pretty;
+  }
+  /* The type system tops out at 500; keeps <b> from requesting a heavier font file. */
+  b,
+  strong {
+    font-weight: 500;
   }
   /* Fieldsets default to min-content width, which lets wide children (date strips) widen the page. */
   fieldset {

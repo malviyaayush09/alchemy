@@ -22,11 +22,11 @@ export type CartLine = {
 
 export type ServiceArea = { pincode: string; area: string };
 
-type State = { lines: CartLine[]; area: ServiceArea | null; lastAdded: { name: string; at: number } | null };
+type State = { lines: CartLine[]; area: ServiceArea | null; lastAdded: { name: string; at: number } | null; pendingAdd: Omit<CartLine, "key" | "quantity"> | null };
 
 const KEY = "cart:v1";
 const MAX_QTY = 20;
-const EMPTY: State = { lines: [], area: null, lastAdded: null };
+const EMPTY: State = { lines: [], area: null, lastAdded: null, pendingAdd: null };
 
 let state: State = EMPTY;
 let loaded = false;
@@ -39,7 +39,7 @@ function load() {
     const raw = window.localStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<State>;
-      state = { lines: Array.isArray(parsed.lines) ? parsed.lines : [], area: parsed.area ?? null, lastAdded: null };
+      state = { lines: Array.isArray(parsed.lines) ? parsed.lines : [], area: parsed.area ?? null, lastAdded: null, pendingAdd: null };
     }
   } catch {
     state = EMPTY;
@@ -107,8 +107,22 @@ export const cart = {
   clear() {
     save({ ...state, lines: [] });
   },
+  /** Add now if a pincode is known; otherwise park the line for the shared pincode dialog. */
+  request(line: Omit<CartLine, "key" | "quantity">) {
+    if (state.area) cart.add(line);
+    else {
+      state = { ...state, pendingAdd: line };
+      emit();
+    }
+  },
+  cancelPending() {
+    state = { ...state, pendingAdd: null };
+    emit();
+  },
   setArea(area: ServiceArea | null) {
-    save({ ...state, area });
+    const pending = state.pendingAdd;
+    save({ ...state, area, pendingAdd: null });
+    if (area && pending) cart.add(pending);
   },
   dismissToast() {
     state = { ...state, lastAdded: null };

@@ -4,6 +4,7 @@ import { brand, deliveryAreaLabel } from "@/config/brand";
 import { env } from "@/lib/env";
 import { fontVariables } from "@/config/fonts";
 import { CartToast } from "@/components/cart/CartToast";
+import { PincodeGate } from "@/components/cart/PincodeGate";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ConsentBanner } from "@/components/layout/ConsentBanner";
 import { Footer } from "@/components/layout/Footer";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppButton />
         <CartToast />
+        <PincodeGate />
         <ConsentBanner />
       </body>
     </html>
