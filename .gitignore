@@ -13,3 +13,6 @@ design/
 
 # Database exports contain customer data
 backups/
+
+# Client-facing documents (shared privately, not in the public repo)
+docs/*.pdf

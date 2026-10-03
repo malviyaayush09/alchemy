@@ -27,15 +27,25 @@ export default async function OrderPage({ params, searchParams }: Props) {
   if (!verifyOrderToken(number, t) && !owns) notFound();
 
   const token = orderToken(number);
-  const paid = order.paymentStatus === "paid";
+  // "Settled" = nothing left to wait for (paid, or closed by the bakery).
+  const paid = order.paymentStatus === "paid" || ["cancelled", "refunded"].includes(order.status);
+  const headline: Partial<Record<typeof order.status, string>> = {
+    placed: "Thank you. Your order is placed.",
+    confirmed: "Your order is confirmed.",
+    being_crafted: "Your cake is being crafted.",
+    out_for_delivery: "Your order is on its way.",
+    delivered: "Delivered. Enjoy!",
+    cancelled: "This order was cancelled.",
+    refunded: "This order was refunded.",
+  };
 
   return (
     <div className="container-x py-8 lg:py-12">
       <header className="text-center">
         <GoldRule />
         <p className="eyebrow mt-4 text-body">Order {order.orderNumber}</p>
-        <h1 className="mt-2 text-[2.25rem] sm:text-[3rem]">{paid ? "Thank you. Your order is placed." : "Almost there."}</h1>
-        {paid ? <p className="mt-2 text-body">We&apos;ve emailed your confirmation to {order.email}. Bookmark this page to track your order.</p> : null}
+        <h1 className="mt-2 text-[2.25rem] sm:text-[3rem]">{paid ? (headline[order.status] ?? "Your order") : "Almost there."}</h1>
+        {order.status === "placed" ? <p className="mt-2 text-body">We&apos;ve emailed your confirmation to {order.email}. Bookmark this page to track your order.</p> : null}
       </header>
       <div className="mx-auto mt-6 max-w-2xl">
         <PaymentWatcher orderNumber={order.orderNumber} token={token} paid={paid} />

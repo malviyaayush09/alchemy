@@ -52,7 +52,7 @@ export function SlotPicker({ dates, closedDates = [], date, slotId, onChange, er
             return (
               <label key={d} className={`relative shrink-0 ${closed ? "cursor-not-allowed" : "cursor-pointer"}`}>
                 <input type="radio" name="delivery-date" value={d} checked={on} disabled={closed} onChange={() => onChange({ date: d, slotId: null, slotLabel: null })} className="peer sr-only" />
-                <span className="flex min-h-16 w-[5.25rem] flex-col items-center justify-center border border-line bg-paper text-ink peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-disabled:border-dashed peer-disabled:bg-paper-deep peer-disabled:text-body peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
+                <span className="flex min-h-16 w-[6rem] flex-col items-center justify-center border border-line bg-paper text-ink peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-disabled:border-dashed peer-disabled:bg-paper-deep peer-disabled:text-body peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
                   <span className="text-[0.75rem] font-medium uppercase tracking-[0.08em]">{closed ? "Closed" : label(d, i)}</span>
                   <span className="mt-0.5 text-[0.9375rem]">{dmFmt.format(new Date(`${d}T00:00:00Z`))}</span>
                 </span>
