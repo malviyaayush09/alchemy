@@ -9,7 +9,7 @@ Made-to-order cake shop for HSR Layout, Bengaluru. Next.js (App Router) + TypeSc
 ## 1. Set up the database (once)
 
 1. Create a Supabase project in the **Mumbai (ap-south-1)** region.
-2. In **SQL Editor**, run [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), then [`supabase/seed.sql`](supabase/seed.sql). The seed is safe to re-run.
+2. In **SQL Editor**, run [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), then [`supabase/seed.sql`](supabase/seed.sql), then [`supabase/migrations/0002_operations.sql`](supabase/migrations/0002_operations.sql) (closed dates + alert emails). All are safe to re-run except 0001.
 3. Copy `.env.example` to `.env.local` and fill in `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API). Set `SITE_URL=http://localhost:3000` locally.
 
 All tables have row-level security on with **no policies**. Only the server, using the service-role key, can read or write.
@@ -48,6 +48,19 @@ Phone OTP is the primary method and email OTP the fallback. OTP delivery sits be
 ## 7. Invoices
 
 GST invoice PDFs (`/api/invoices/<order>`) appear only when `brand.legal.gstin` is set **and** a GST rate above 0 is set in Admin → Settings. **[LEGAL REVIEW NEEDED]**: the CA must confirm the rate, HSN, place of supply and how delivery charges are taxed.
+
+## 8. Operations
+
+- **Order alerts:** Admin → Settings → *Alert emails* (up to 5). Each address gets an email for every new paid order, with the cakes, messages, address and an admin link.
+- **Error alerts:** the same addresses get an email when the server hits an error (`src/instrumentation.ts`), at most once per hour per distinct error. In local dev, signed in as staff, open `/api/dev/test-error` to send a test alert.
+- **Closed dates:** Admin → Slots → *Closed dates*. Customers see those days as "Closed"; the database also refuses orders for them. Existing orders on that day are not cancelled.
+- **Kitchen sheet:** Admin → Kitchen. One day at a time, grouped by slot, with a prep list and each cake's message in large type. *Print* gives a clean paper copy.
+- **Backups:** `npm run db:backup` exports every table to `backups/<timestamp>/` (gitignored: it contains customer data). Schedule it nightly on Windows (run once in **Command Prompt**, not PowerShell, from this folder):
+  ```
+  schtasks /Create /SC DAILY /ST 02:00 /TN "Alchemy DB backup" /TR "cmd /c cd /d %CD% && npm run db:backup"
+  ```
+  Product photos in Supabase Storage aren't included. For production, Supabase Pro's daily backups are the safer option.
+- **Dev tools are locked off in production.** The simulated payment, on-screen OTP and test-error route are refused on Vercel production and on any public `https` `SITE_URL`, even if `ENABLE_DEV_TOOLS=1` is set by mistake. Only orders created without Razorpay keys can ever be "simulated".
 
 ## Before launch checklist
 

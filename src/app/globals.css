@@ -154,6 +154,18 @@
   }
 }
 
+/* Printing (kitchen sheet): only the sheet, on white. */
+@media print {
+  body:has(.kitchen-sheet) > :not(main),
+  body:has(.kitchen-sheet) [role="region"] {
+    display: none !important;
+  }
+  body:has(.kitchen-sheet),
+  body:has(.kitchen-sheet) main > div {
+    background: #fff !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

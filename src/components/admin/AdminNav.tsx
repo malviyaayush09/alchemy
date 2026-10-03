@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const tabs = [
   { href: "/admin/orders", label: "Orders" },
+  { href: "/admin/kitchen", label: "Kitchen" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/slots", label: "Slots" },
   { href: "/admin/pincodes", label: "Pincodes" },
@@ -15,7 +16,7 @@ const tabs = [
 export function AdminNav() {
   const path = usePathname();
   return (
-    <nav aria-label="Admin" className="sticky top-16 z-30 border-b border-line bg-ink text-paper lg:top-[4.5rem]">
+    <nav aria-label="Admin" className="print:hidden sticky top-16 z-30 border-b border-line bg-ink text-paper lg:top-[4.5rem]">
       <ul className="container-x scroll-row gap-0!">
         {tabs.map((t) => {
           const on = path.startsWith(t.href);

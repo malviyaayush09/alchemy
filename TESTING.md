@@ -27,13 +27,17 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 - **Slots**: time, capacity, same-day cutoff, enable/disable, midnight/express
 - **Pincodes**: add, pause, remove; see notify-me requests
 - **Coupons**: flat or %, minimum order, expiry, usage limit, active
-- **Settings**: message and gift note limits, delivery fee, minimum order, how far ahead customers can book, GST
+- **Settings**: message and gift note limits, delivery fee, minimum order, how far ahead customers can book, GST, **alert emails**
+- **Kitchen**: a printable day sheet: prep list, orders by slot, messages on cakes
+- **Closed dates** (in Slots): holidays customers can't book
 
 ### Behind the scenes
 - An order is marked **paid only after Razorpay's signed webhook is verified**, never from the browser
 - Every price is recalculated on the server; editing the cart in the browser can't change what's charged
 - Slot capacity is enforced even when two people check out at the same moment
 - An email goes out on order placed and on every status change (printed in the terminal until the Resend key is added)
+- The bakery gets a **new-order alert** email, and an **error alert** if the server breaks (max one per hour per error)
+- Dev tools (simulated payment, on-screen OTP) are **locked off on the live site**
 - GST invoice PDF (hidden until a GSTIN and GST rate are set)
 
 ---
@@ -119,6 +123,15 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 - [ ] Settings: message max **0** hides the field; gift note max **0** hides the gift option
 - [ ] **Delivery fee ₹50** is added in checkout; **minimum order** above the cart total blocks checkout
 - [ ] **Book up to 3 days** shows only 4 dates
+
+## 6b. Operations
+
+- [ ] Settings → **Alert emails**: add your email (must be the Resend account email until a domain is verified)
+- [ ] Place and pay a test order: you get the customer email **and** a "New order …" alert
+- [ ] Signed in as admin, open `/api/dev/test-error` (local only): you get one "site error" email. Opening it again within an hour sends nothing
+- [ ] Slots → **Closed dates**: close a date. In checkout it shows "Closed" and can't be picked. **Reopen** it
+- [ ] **Kitchen**: Today / Tomorrow / pick a date. The prep list totals are right, messages are easy to read. **Print** shows only the sheet
+- [ ] `npm run db:backup` creates a `backups/` folder with one JSON file per table
 
 ## 7. Phone checks (Android Chrome + iPhone Safari)
 

@@ -1,7 +1,9 @@
+import { getClosedDates } from "@/lib/closed-dates";
 import { getAllSlots } from "@/lib/slots";
+import { longDate } from "@/lib/time";
 import type { Slot } from "@/lib/types";
 import { AdminCheck, AdminField, AdminForm, adminInput } from "@/components/admin/AdminForm";
-import { saveSlot } from "../actions";
+import { addClosedDate, removeClosedDate, saveSlot } from "../actions";
 
 function SlotForm({ s }: { s?: Slot }) {
   return (
@@ -42,10 +44,44 @@ function SlotForm({ s }: { s?: Slot }) {
 }
 
 export default async function AdminSlotsPage() {
-  const slots = await getAllSlots();
+  const [slots, closed] = await Promise.all([getAllSlots(), getClosedDates()]);
   return (
     <div>
-      <h1 className="text-[2rem]">Delivery slots</h1>
+      <section aria-labelledby="closed-title" className="mb-10">
+        <h1 id="closed-title" className="text-[2rem]">
+          Closed dates
+        </h1>
+        <p className="mt-1 max-w-2xl text-[0.875rem] text-body">Holidays and days off. Customers see these as &quot;Closed&quot; and can&apos;t book them. Existing orders for that day are not cancelled.</p>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <AdminForm action={addClosedDate} submitLabel="Close this date" className="border border-line bg-paper p-4">
+            <div className="grid grid-cols-2 gap-3">
+              <AdminField label="Date">
+                <input name="date" type="date" required className={adminInput} />
+              </AdminField>
+              <AdminField label="Reason (optional)">
+                <input name="reason" maxLength={80} placeholder="Diwali" className={adminInput} />
+              </AdminField>
+            </div>
+          </AdminForm>
+          <ul className="divide-y divide-line border-y border-line bg-paper">
+            {closed.map((c) => (
+              <li key={c.date} className="flex items-center justify-between gap-3 px-3 py-2">
+                <span className="text-ink">
+                  {longDate(c.date)}
+                  {c.reason ? <span className="text-body"> · {c.reason}</span> : null}
+                </span>
+                <form action={removeClosedDate}>
+                  <input type="hidden" name="date" value={c.date} />
+                  <button className="min-h-11 text-[0.8125rem] text-danger underline">Reopen</button>
+                </form>
+              </li>
+            ))}
+            {!closed.length ? <li className="px-3 py-3 text-[0.875rem] text-body">No closed dates coming up.</li> : null}
+          </ul>
+        </div>
+      </section>
+
+      <h2 className="text-[2rem]">Delivery slots</h2>
       <p className="mt-1 max-w-2xl text-[0.875rem] text-body">
         Customers see only enabled slots. Midnight and express slots stay hidden unless you enable them. A slot is disabled for customers when it&apos;s full, or (for today) once its cutoff has passed.
       </p>

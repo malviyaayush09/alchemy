@@ -31,6 +31,13 @@ export default async function AdminSettingsPage() {
         </div>
 
         <fieldset className="space-y-3 border-t border-line pt-4">
+          <legend className="text-[1.125rem] text-ink">Alerts</legend>
+          <AdminField label="Alert emails" hint="Comma-separated, up to 5. They get every new paid order, and an email if the site hits an error.">
+            <input name="alertEmails" type="text" inputMode="email" defaultValue={s.alertEmails.join(", ")} placeholder="orders@…, owner@…" className={adminInput} />
+          </AdminField>
+        </fieldset>
+
+        <fieldset className="space-y-3 border-t border-line pt-4">
           <legend className="text-[1.125rem] text-ink">GST [LEGAL REVIEW NEEDED]</legend>
           <p className="text-[0.8125rem] text-body">
             Invoices appear only when a GSTIN is set in brand config {brand.legal.gstin ? `(current: ${brand.legal.gstin})` : "(currently empty, so invoices are hidden)"} and the rate below is above 0. Confirm the rate and HSN with your CA. Changes apply to new orders only.

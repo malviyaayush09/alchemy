@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { isDbConfigured } from "@/lib/env";
 import { fail, json } from "@/lib/http";
 import { notifyOrderStatus } from "@/lib/notify";
+import { notifyStaffNewOrder } from "@/lib/notify/staff";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { sha256Hex } from "@/lib/tokens";
 
@@ -48,7 +49,12 @@ export async function POST(req: Request) {
       console.error("[webhook] mark_order_paid", payment.order_id, error.message);
       return json({ ok: false, error: error.message });
     }
-    if (orderId) after(() => notifyOrderStatus(orderId as string, "placed"));
+    if (orderId) {
+      after(async () => {
+        await notifyOrderStatus(orderId as string, "placed");
+        await notifyStaffNewOrder(orderId as string);
+      });
+    }
     return json({ ok: true });
   }
 

@@ -93,6 +93,8 @@ const fetchSettings = cached(async (): Promise<StoreSettings> => {
     gstRateBps: r.gst_rate_bps,
     pricesIncludeGst: r.prices_include_gst,
     hsnCode: r.hsn_code,
+    // Column added in 0002_operations.sql; absent until that migration runs.
+    alertEmails: String(r.alert_emails ?? "").split(",").map((e: string) => e.trim()).filter(Boolean),
   };
 }, "settings");
 

@@ -4,6 +4,7 @@ import { db } from "./db";
 import { devToolsEnabled, isRazorpayConfigured } from "./env";
 import { computeTotals, type CouponRule } from "./pricing";
 import { createRazorpayOrder } from "./razorpay";
+import { isClosedDate } from "./closed-dates";
 import { checkPincode } from "./serviceability";
 import { getSlotAvailability } from "./slots";
 import { orderToken } from "./tokens";
@@ -91,6 +92,7 @@ export async function createCheckout(input: CheckoutInput, userId: string | null
   const date = String(input.date ?? "");
   const slotId = String(input.slotId ?? "");
   if (!isIsoDate(date) || !isUuid(slotId)) throw new ValidationError("slot", "Choose a delivery date and time slot.");
+  if (await isClosedDate(date)) throw new ValidationError("slot", "We're closed on that date. Please choose another day.");
   const slot = (await getSlotAvailability(date, settings.maxDaysAhead)).find((s) => s.id === slotId);
   if (!slot || !slot.available) throw new ValidationError("slot", "That slot is no longer available. Please choose another.");
 
@@ -161,6 +163,7 @@ export async function createCheckout(input: CheckoutInput, userId: string | null
     const m = error.message;
     if (m.includes("SLOT_FULL") || m.includes("SLOT_UNAVAILABLE")) throw new ValidationError("slot", "That slot just filled up. Please choose another.");
     if (m.includes("COUPON")) throw new ValidationError("coupon", "That coupon can't be used right now.");
+    if (m.includes("DATE_CLOSED")) throw new ValidationError("slot", "We're closed on that date. Please choose another day.");
     throw new Error(`create_pending_order: ${m}`);
   }
   const created = (data as { order_id: string; order_number: string }[])[0];

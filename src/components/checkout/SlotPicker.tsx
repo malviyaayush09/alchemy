@@ -11,6 +11,8 @@ const dmFmt = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short",
 
 type Props = {
   dates: string[];
+  /** Shown as "Closed" and not selectable. */
+  closedDates?: string[];
   date: string | null;
   slotId: string | null;
   onChange: (v: { date: string; slotId: string | null; slotLabel: string | null }) => void;
@@ -18,7 +20,7 @@ type Props = {
 };
 
 /** Horizontal date strip + slot grid. Full / past-cutoff slots are disabled, never hidden. */
-export function SlotPicker({ dates, date, slotId, onChange, error }: Props) {
+export function SlotPicker({ dates, closedDates = [], date, slotId, onChange, error }: Props) {
   const [slots, setSlots] = useState<SlotOption[] | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,11 +48,12 @@ export function SlotPicker({ dates, date, slotId, onChange, error }: Props) {
         <div className="scroll-row -mx-4 px-4 pb-1 sm:mx-0 sm:px-0">
           {dates.map((d, i) => {
             const on = d === date;
+            const closed = closedDates.includes(d);
             return (
-              <label key={d} className="relative shrink-0 cursor-pointer">
-                <input type="radio" name="delivery-date" value={d} checked={on} onChange={() => onChange({ date: d, slotId: null, slotLabel: null })} className="peer sr-only" />
-                <span className="flex min-h-16 w-[4.5rem] flex-col items-center justify-center border border-line bg-paper text-ink peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
-                  <span className="text-[0.75rem] font-medium uppercase tracking-[0.08em]">{label(d, i)}</span>
+              <label key={d} className={`relative shrink-0 ${closed ? "cursor-not-allowed" : "cursor-pointer"}`}>
+                <input type="radio" name="delivery-date" value={d} checked={on} disabled={closed} onChange={() => onChange({ date: d, slotId: null, slotLabel: null })} className="peer sr-only" />
+                <span className="flex min-h-16 w-[5.25rem] flex-col items-center justify-center border border-line bg-paper text-ink peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-disabled:border-dashed peer-disabled:bg-paper-deep peer-disabled:text-body peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
+                  <span className="text-[0.75rem] font-medium uppercase tracking-[0.08em]">{closed ? "Closed" : label(d, i)}</span>
                   <span className="mt-0.5 text-[0.9375rem]">{dmFmt.format(new Date(`${d}T00:00:00Z`))}</span>
                 </span>
               </label>

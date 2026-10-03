@@ -11,7 +11,7 @@ import { imageSize } from "@/lib/image-size";
 import { notifyOrderStatus } from "@/lib/notify";
 import { NEXT_STATUSES, getOrderById } from "@/lib/orders";
 import type { OrderStatus } from "@/lib/types";
-import { cleanText, isHttpsUrl, isPincode, isUuid, normalizePhone, rupeesToPaise } from "@/lib/validate";
+import { cleanText, isHttpsUrl, isPincode, isUuid, normalizeEmail, normalizePhone, rupeesToPaise } from "@/lib/validate";
 
 export type AdminState = { ok?: boolean; error?: string; message?: string } | null;
 
@@ -208,6 +208,27 @@ export async function saveSlot(_: AdminState, fd: FormData): Promise<AdminState>
   return { ok: true, message: "Slot saved." };
 }
 
+// ─── Closed dates ───────────────────────────────────────────────────────────
+
+export async function addClosedDate(_: AdminState, fd: FormData): Promise<AdminState> {
+  await requireStaff();
+  const date = String(fd.get("date") ?? "");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { error: "Pick a date." };
+  const reason = cleanText(fd.get("reason"), 80) || null;
+  const { count } = await db().from("orders").select("id", { count: "exact", head: true }).eq("delivery_date", date).in("status", ["placed", "confirmed", "being_crafted", "out_for_delivery"]);
+  const { error } = await db().from("closed_dates").upsert({ date, reason });
+  if (error) return { error: error.message.includes("closed_dates") ? "Run supabase/migrations/0002_operations.sql first (it adds closed dates)." : error.message };
+  revalidatePath("/admin/slots");
+  return { ok: true, message: count ? `Closed ${date}. Note: ${count} existing order(s) are still booked for that day.` : `Closed ${date}.` };
+}
+
+export async function removeClosedDate(fd: FormData) {
+  await requireStaff();
+  const date = String(fd.get("date") ?? "");
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) await db().from("closed_dates").delete().eq("date", date);
+  revalidatePath("/admin/slots");
+}
+
 // ─── Pincodes ───────────────────────────────────────────────────────────────
 
 export async function addPincode(_: AdminState, fd: FormData): Promise<AdminState> {
@@ -280,11 +301,17 @@ export async function saveSettings(_: AdminState, fd: FormData): Promise<AdminSt
   if (fee === null || min === null) return { error: "Amounts must be in rupees." };
   if (!(gst >= 0 && gst <= 50)) return { error: "GST rate must be 0–50%." };
   if (Object.values(nums).some((n) => Number.isNaN(n))) return { error: "All limits must be numbers." };
+  const alertEmails = String(fd.get("alertEmails") ?? "").split(/[,\s]+/).filter(Boolean).map((e) => normalizeEmail(e));
+  if (alertEmails.some((e) => !e)) return { error: "Alert emails: enter valid addresses, separated by commas." };
+  if (alertEmails.length > 5) return { error: "Up to 5 alert emails." };
   const { error } = await db()
     .from("store_settings")
-    .update({ ...nums, delivery_fee_paise: fee, min_order_paise: min, gst_rate_bps: Math.round(gst * 100), prices_include_gst: bool(fd, "pricesIncludeGst"), hsn_code: cleanText(fd.get("hsnCode"), 12), updated_at: new Date().toISOString() })
+    .update({ ...nums, delivery_fee_paise: fee, min_order_paise: min, gst_rate_bps: Math.round(gst * 100), prices_include_gst: bool(fd, "pricesIncludeGst"), hsn_code: cleanText(fd.get("hsnCode"), 12), alert_emails: alertEmails.join(","), updated_at: new Date().toISOString() })
     .eq("id", 1);
-  if (error) return { error: error.message.includes("check") ? "One of the values is out of range." : error.message };
+  if (error) {
+    if (error.message.includes("alert_emails")) return { error: "Run supabase/migrations/0002_operations.sql first (it adds alert emails)." };
+    return { error: error.message.includes("check") ? "One of the values is out of range." : error.message };
+  }
   refreshStorefront();
   return { ok: true, message: "Settings saved." };
 }

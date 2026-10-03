@@ -24,6 +24,7 @@ export const defaultSettings: StoreSettings = {
   gstRateBps: 0,
   pricesIncludeGst: true,
   hsnCode: "",
+  alertEmails: [],
 };
 
 /** INTERIM photos from /design: rights and product mapping unconfirmed. Must not ship to production. */

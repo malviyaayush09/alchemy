@@ -17,8 +17,19 @@ export const env = {
 export const isDbConfigured = () => Boolean(env.supabaseUrl && env.supabaseServiceKey);
 export const isRazorpayConfigured = () => Boolean(env.razorpayKeyId && env.razorpayKeySecret && env.razorpayWebhookSecret);
 
-/** Dev-only helpers (simulated payments, on-screen OTP) are never available in a production deployment. */
-export const devToolsEnabled = () => process.env.NODE_ENV !== "production" || process.env.ENABLE_DEV_TOOLS === "1";
+/**
+ * Dev-only helpers (simulated payments, on-screen OTP).
+ * HARD-BLOCKED on a live deployment, whatever ENABLE_DEV_TOOLS says: on Vercel
+ * production, or whenever SITE_URL is a public https address. Otherwise on in
+ * `next dev`, and on a local production build only with ENABLE_DEV_TOOLS=1.
+ */
+export function isLiveDeployment() {
+  if (process.env.VERCEL_ENV === "production") return true;
+  const site = process.env.SITE_URL ?? "";
+  return /^https:\/\//i.test(site) && !/^https:\/\/(localhost|127\.0\.0\.1)(:|\/|$)/i.test(site);
+}
+
+export const devToolsEnabled = () => !isLiveDeployment() && (process.env.NODE_ENV !== "production" || process.env.ENABLE_DEV_TOOLS === "1");
 
 /** Guard: Razorpay must stay in TEST mode for this build. */
 export function assertRazorpayTestMode() {

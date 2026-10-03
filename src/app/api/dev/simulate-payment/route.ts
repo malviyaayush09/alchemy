@@ -18,6 +18,8 @@ export async function POST(req: Request) {
 
   const { data: order } = await db().from("orders").select("razorpay_order_id, total_paise").eq("order_number", number).maybeSingle();
   if (!order?.razorpay_order_id) return fail(404, "Order not found");
+  // Never "pay" a real Razorpay order: only orders created without Razorpay keys can be simulated.
+  if (!order.razorpay_order_id.startsWith("order_dev_")) return fail(403, "Only development orders can be simulated");
 
   const payload = JSON.stringify({
     event: "payment.captured",

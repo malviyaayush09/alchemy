@@ -16,6 +16,7 @@ type Props = {
   brandName: string;
   brandColor: string;
   dates: string[];
+  closedDates: string[];
   deliveryFeePaise: number;
   minOrderPaise: number;
   holdMinutes: number;
@@ -61,7 +62,7 @@ export function CheckoutForm(p: Props) {
     line2: saved?.line2 ?? "",
     landmark: saved?.landmark ?? "",
   });
-  const [slot, setSlot] = useState<{ date: string | null; slotId: string | null; slotLabel: string | null }>({ date: p.dates[0] ?? null, slotId: null, slotLabel: null });
+  const [slot, setSlot] = useState<{ date: string | null; slotId: string | null; slotLabel: string | null }>({ date: p.dates.find((d) => !p.closedDates.includes(d)) ?? null, slotId: null, slotLabel: null });
   const [coupon, setCoupon] = useState({ code: "", applied: "", discount: 0, error: "", checking: false });
   const [saveAddress, setSaveAddress] = useState(Boolean(p.user) && !saved);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -280,7 +281,7 @@ export function CheckoutForm(p: Props) {
 
           <Section n={3} title="Delivery date & time">
             <div id="co-slot" tabIndex={-1}>
-              <SlotPicker dates={p.dates} date={slot.date} slotId={slot.slotId} onChange={(v) => { setSlot(v); setErrors((x) => ({ ...x, slot: "" })); }} error={errors.slot} />
+              <SlotPicker dates={p.dates} closedDates={p.closedDates} date={slot.date} slotId={slot.slotId} onChange={(v) => { setSlot(v); setErrors((x) => ({ ...x, slot: "" })); }} error={errors.slot} />
             </div>
           </Section>
         </div>

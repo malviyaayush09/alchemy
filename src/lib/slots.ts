@@ -1,3 +1,4 @@
+import { isClosedDate } from "./closed-dates";
 import { db, must } from "./db";
 import { isDbConfigured } from "./env";
 import { addDays, nowMinutesIST, timeToMinutes, todayIST } from "./time";
@@ -48,7 +49,7 @@ export function bookableDates(maxDaysAhead: number, now = new Date()) {
 export async function getSlotAvailability(date: string, maxDaysAhead: number, now = new Date()): Promise<SlotAvailability[]> {
   if (!isDbConfigured()) return [];
   const dates = bookableDates(maxDaysAhead, now);
-  if (!dates.includes(date)) return [];
+  if (!dates.includes(date) || (await isClosedDate(date))) return [];
 
   const slots = (await getAllSlots()).filter((s) => s.isEnabled);
   const nowIso = now.toISOString();

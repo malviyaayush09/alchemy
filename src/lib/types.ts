@@ -32,6 +32,8 @@ export type StoreSettings = {
   gstRateBps: number;
   pricesIncludeGst: boolean;
   hsnCode: string;
+  /** Staff addresses for new-order and error alerts. */
+  alertEmails: string[];
 };
 
 export type Slot = {

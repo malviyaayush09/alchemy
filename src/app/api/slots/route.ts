@@ -1,4 +1,5 @@
 import { getSettings } from "@/lib/catalog";
+import { isClosedDate } from "@/lib/closed-dates";
 import { fail, json } from "@/lib/http";
 import { bookableDates, getSlotAvailability } from "@/lib/slots";
 import { isIsoDate } from "@/lib/time";
@@ -13,6 +14,7 @@ export async function GET(req: Request) {
   return json({
     ok: true,
     date,
+    closed: await isClosedDate(date),
     slots: slots.map((s) => ({ id: s.id, label: s.label, kind: s.kind, available: s.available, reason: s.reason })),
   });
 }
