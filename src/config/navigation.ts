@@ -16,14 +16,6 @@ export const policyNav: NavLink[] = [
   { href: "/delivery-policy", label: "Shipping & Delivery" },
 ];
 
-/** Collection filters are tag-driven; these are the entry points shown in the hero. */
-export const collectionShortcuts: NavLink[] = [
-  { href: "/collections?tag=eggless", label: "Eggless" },
-  { href: "/collections?tag=egg", label: "With Egg" },
-  { href: "/collections?tag=pull-up", label: "Pull-Up Cakes" },
-  { href: "/collections?tag=sugar-free", label: "Sugar-Free" },
-];
-
 /** Collection filters are driven by product tags, not hardcoded product lists. */
 export const collectionFilters: { tag: string | null; label: string }[] = [
   { tag: null, label: "All" },

@@ -1,6 +1,5 @@
 import { getImageProps } from "next/image";
 import { brand } from "@/config/brand";
-import { collectionShortcuts } from "@/config/navigation";
 import { heroImage } from "@/data/catalog";
 import { Button } from "@/components/ui/Button";
 
@@ -32,17 +31,6 @@ export function Hero() {
               Shop all cakes
             </Button>
           </div>
-          <nav aria-label="Shop by type" className="-mx-4 mt-3 sm:mx-0">
-            <ul className="scroll-row px-4 sm:flex-wrap sm:px-0">
-              {collectionShortcuts.map((c) => (
-                <li key={c.href} className="shrink-0">
-                  <Button href={c.href} variant="outline-light" size="sm" className="tracking-[0.06em]! normal-case!">
-                    {c.label}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
 
         <div className="relative hidden min-h-[30rem] lg:block">
