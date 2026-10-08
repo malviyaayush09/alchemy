@@ -51,7 +51,7 @@ export const faqGroups: FaqGroup[] = [
       { q: "Is there a delivery charge?", a: "Any delivery charge is shown in your order summary before you pay." },
       {
         q: "How do I track my order?",
-        a: "Your confirmation email has a link to your order page, and signing in shows all your orders. Once your cake is out for delivery, the rider's details appear there.",
+        a: "Your confirmation email has a link to your order page, and signing in shows all your orders. Once your cake is out for delivery, the rider's details appear there. Our own team or a delivery partner may call you from a number you don't recognise.",
       },
     ],
   },

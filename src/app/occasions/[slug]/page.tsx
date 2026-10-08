@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { brand, deliveryAreaLabel } from "@/config/brand";
+import { features } from "@/config/features";
 import { getOccasion, inSeason, occasions, themeVars } from "@/config/occasions";
 import { getProducts, getSettings } from "@/lib/catalog";
 import { pairingFor } from "@/lib/pairing";
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
  */
 export default async function OccasionPage({ params }: { params: Params }) {
   const o = getOccasion((await params).slug);
-  if (!o) notFound();
+  if (!o || !features.occasions) notFound();
   const [all, settings] = await Promise.all([getProducts(), getSettings()]);
   const cakes = all
     .filter((p) => p.kind === "cake")
@@ -96,7 +97,7 @@ export default async function OccasionPage({ params }: { params: Params }) {
           Choose your cake
         </h2>
         <p className="mt-2 text-center text-[1.0625rem] text-body">Tap a cake for a quick look, and try your message on it.</p>
-        <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
+        <ul className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-14">
           {cakes.map((p) => (
             <li key={p.id} className="flex">
               <ProductCard product={p} messageMax={settings.cakeMessageMaxChars} occasion={o.slug} pairing={pairingFor(p, all)} />

@@ -344,7 +344,7 @@ export function CheckoutForm(p: Props) {
           </Section>
         </div>
 
-        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">
           <Section n={4} title="Order summary">
             <ul className="divide-y divide-line border-y border-line">
               {state.lines.map((l) => (

@@ -1,15 +1,20 @@
 import { deliveryAreaLabel } from "@/config/brand";
 import { GinkgoMark } from "@/components/brand/GinkgoMark";
 
+/** Plain facts only: no delivery-time or popularity claims. */
+const messages = ["Made to order", `Delivered in ${deliveryAreaLabel}`, "Every cake in 500 g & 1 kg"];
+
 export function AnnouncementBar() {
   return (
     <div className="on-ink bg-ink pt-[env(safe-area-inset-top)] text-paper">
-      <p className="container-x flex min-h-9 items-center justify-center gap-2.5 text-center">
-        <GinkgoMark className="size-3.5 shrink-0 text-accent" />
-        <span className="text-[0.875rem] tracking-[0.06em] sm:text-[0.9375rem] sm:tracking-[0.12em]">
-          <span className="hidden xs:inline">Made to order · </span>Delivered in {deliveryAreaLabel}
-        </span>
-      </p>
+      <ul className="container-x flex min-h-12 items-center justify-center text-center sm:min-h-14 lg:justify-around">
+        {messages.map((m, i) => (
+          <li key={m} className={`items-center gap-2.5 text-[0.9375rem] tracking-[0.04em] sm:text-[1rem] ${i === 1 ? "flex" : "hidden lg:flex"}`}>
+            <GinkgoMark className="size-3.5 shrink-0 text-accent" />
+            {m}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

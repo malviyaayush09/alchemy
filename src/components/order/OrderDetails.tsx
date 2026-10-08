@@ -74,7 +74,7 @@ export function OrderDetails({ order, invoiceHref }: { order: Order; invoiceHref
         </section>
       </div>
 
-      <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+      <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
         <div className="border border-line bg-paper-soft p-5">
           <h2 className="eyebrow text-body">Delivery</h2>
           <p className="mt-2 font-display text-[1.25rem] text-ink">{longDate(order.deliveryDate)}</p>

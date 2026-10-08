@@ -58,7 +58,7 @@ export default async function CollectionsPage({ searchParams }: { searchParams: 
       <div className="container-x py-8 lg:py-12">
         {/* Filters: centred pills (scrolling row on phones). Plain links: work without JS. */}
         <nav aria-label="Filter cakes">
-          <ul className="scroll-row -mx-4 gap-2.5 px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:px-0">
+          <ul className="scroll-row -mx-3 gap-2.5 px-3 sm:mx-0 sm:flex-wrap sm:justify-center sm:px-0">
             {collectionFilters.map((f) => {
               const on = f.tag === active.tag;
               return (
@@ -87,7 +87,7 @@ export default async function CollectionsPage({ searchParams }: { searchParams: 
         </div>
         <h2 className="sr-only">{active.tag ? `${active.label} cakes` : "All cakes"}</h2>
         {list.length ? (
-          <ul className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
+          <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-10 sm:grid-cols-3 sm:gap-x-4 lg:grid-cols-4 lg:gap-x-5 lg:gap-y-14">
             {list.map((p, i) => (
               <li key={p.id} className="flex">
                 <ProductCard product={p} priority={i < 2} messageMax={cakeMessageMaxChars} pairing={pairingFor(p, all)} />

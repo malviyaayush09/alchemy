@@ -6,6 +6,7 @@ import { SignatureCakes } from "@/components/home/SignatureCakes";
 import { SplitFeatures } from "@/components/home/SplitFeatures";
 import { StoryChapters } from "@/components/home/StoryChapters";
 import { BakeryJsonLd } from "@/components/seo/BakeryJsonLd";
+import { features } from "@/config/features";
 
 export const revalidate = 300;
 
@@ -19,7 +20,7 @@ export default function HomePage() {
       <Hero />
       <PromiseBand />
       <SignatureCakes />
-      <ShopByOccasion />
+      {features.occasions ? <ShopByOccasion /> : null}
       <StoryChapters />
       <HowOrderingWorks />
       <SplitFeatures />

@@ -79,7 +79,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 
       <div className="mt-2 grid gap-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-10 lg:gap-16">
         <div>
-          <div className="relative -mx-4 aspect-[4/5] overflow-hidden bg-paper-soft sm:mx-0">
+          <div className="relative -mx-3 aspect-[4/5] overflow-hidden bg-paper-soft sm:mx-0">
             {main ? (
               <Image src={main.src} alt={main.alt || product.name} fill preload fetchPriority="high" sizes="(min-width: 1312px) 640px, (min-width: 768px) 50vw, 100vw" className="object-cover" />
             ) : (

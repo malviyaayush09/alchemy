@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { features } from "@/config/features";
 import { brand, deliveryAreaLabel } from "@/config/brand";
 import { inSeason, occasions } from "@/config/occasions";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -13,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default function OccasionsPage() {
+  if (!features.occasions) notFound();
   // In-season festivals first, then the everyday occasions, then festivals that are coming later.
   const rank = (o: (typeof occasions)[number]) => (o.season ? (inSeason(o) ? 0 : 2) : 1);
   const items = [...occasions].sort((a, b) => rank(a) - rank(b));

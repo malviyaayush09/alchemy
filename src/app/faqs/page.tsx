@@ -16,7 +16,7 @@ export default function FaqsPage() {
       <PageHeader crumb="FAQs" title="Frequently asked questions" intro="Ordering, delivery and payment, answered." />
       <div className="container-x grid gap-10 py-10 lg:grid-cols-[14rem_1fr] lg:gap-16 lg:py-14">
         <nav aria-label="FAQ sections" className="hidden lg:block">
-          <ul className="sticky top-24 space-y-1 border-l border-line">
+          <ul className="sticky top-6 space-y-1 border-l border-line">
             {faqGroups.map((g) => (
               <li key={g.title}>
                 <a href={`#${slug(g.title)}`} className="flex min-h-11 items-center pl-4 text-[0.9375rem] text-ink hover:text-body">

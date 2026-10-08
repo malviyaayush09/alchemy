@@ -7,7 +7,7 @@ import { cleanText, normalizePhone } from "@/lib/validate";
 
 /** Guest tracking: order number + phone must both match. Returns a signed order link. */
 export async function POST(req: Request) {
-  if (!features.trackOrder) return fail(404, "Not found");
+  if (!features.trackOrderLookup) return fail(404, "Not found");
   if (!sameOrigin(req)) return fail(403, "Forbidden");
   if (!isDbConfigured()) return fail(503, "Tracking isn't available yet.");
   if (!(await rateLimit(`track:${clientIp(req)}`, 600, 10))) return fail(429, "Too many attempts. Please wait a few minutes.");

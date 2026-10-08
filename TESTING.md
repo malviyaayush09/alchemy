@@ -9,9 +9,10 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 ## What we have
 
 ### Customer site
-- **Home**: a hero slideshow (4 slides, changes every 4 s; pause button, dots, arrows on desktop, swipe on phones; stops while hovered), the cakes straight away, brand story (chapters), how ordering works
+- **Header**: tall top bar with three messages, large centred logo; the header scrolls away with the page
+- **Home**: a hero slideshow (photo fills the right side edge to edge on desktop) (4 slides, changes every 4 s; pause button, dots, arrows on desktop, swipe on phones; stops while hovered), the cakes straight away, brand story (chapters), how ordering works
 - **Glimpse (quick view)**: tap a cake photo or the eye button for a pop-up with the picture, description, both sizes with prices and the cake message. Whatever you type **appears on a chocolate plaque over the cake** as a preview. One-tap message ideas fill it in
-- **Shop by occasion** (`/occasions`): Birthday, Anniversary, Congratulations, Just because, Diwali, Christmas. Each page **re-themes itself** (colours + a moving motif: confetti, petals, ribbons, ginkgo leaves, diyas, stars) and suggests messages for that occasion. Festivals appear on the home page only in season (Diwali 1 Oct–15 Nov, Christmas in December). Edit them in `src/config/occasions.ts`. Cakes tagged with an occasion's slug in admin show first
+- **Shop by occasion** is switched off for now (`occasions` in `src/config/features.ts`); the pages 404 and the menu link and home section are hidden. When on: (`/occasions`): Birthday, Anniversary, Congratulations, Just because, Diwali, Christmas. Each page **re-themes itself** (colours + a moving motif: confetti, petals, ribbons, ginkgo leaves, diyas, stars) and suggests messages for that occasion. Festivals appear on the home page only in season (Diwali 1 Oct–15 Nov, Christmas in December). Edit them in `src/config/occasions.ts`. Cakes tagged with an occasion's slug in admin show first
 - **Pair it**: in the Glimpse, a tick-box offers one other available cake ("Bigger celebration? Add a second cake"); the button becomes **Add both · ₹total**
 - **Dark mode**: moon icon in the header. Light is the default; the choice is remembered on that device. Occasion pages get an evening version of their own colours. Admin always stays light
 - **Send as a surprise** (needs migration `0003_delight.sql`): a tick-box at checkout asks who it's for. Admin, the kitchen sheet and the new-order email show **SURPRISE**: seal the gift note in an envelope, and the rider calls the customer, not the recipient
@@ -23,7 +24,7 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 - **Cart**: quantities, remove, and prices re-checked with the server
 - **Checkout**: guest checkout (login never required); delivery date + time slot (full or closed slots disabled); coupon; prepaid only
 - **Order page**: live status timeline, delivery slot and rider details, reached from the confirmation or a signed link in the email
-- **Track Order** is switched off for now (bakery's request): `src/config/features.ts`. `/track-order` shows 404; the order link in emails still works
+- **Track Order** page: the delivery note (own team or delivery partners may call from unknown numbers). The order-ID lookup form is off (`trackOrderLookup` in `src/config/features.ts`); the order link in emails still works
 - **Login** by phone OTP (email as fallback), and **My Account** with orders, saved addresses and profile
 - **Gift Box, About Us, FAQs, Contact, Privacy, Terms, Refund, Delivery policy** (policies are placeholders marked **[LEGAL REVIEW NEEDED]**)
 - Consent banner (analytics load only after Accept), and a WhatsApp chat button (hidden until a number is set)
@@ -67,8 +68,7 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 ## 1. Customer journey (most important)
 
 - [ ] On a cake card, tap the **photo** or the **eye**: the Glimpse opens. Type a message: it shows on the plaque. Tap a message idea, pick **1 kg**, **Add to cart**
-- [ ] Open **Occasions → Anniversary**: the page turns wine and rose-gold with drifting petals, and the Glimpse there suggests anniversary messages
-- [ ] Home: **Shop by occasion** shows Diwali marked "In season" (until 15 Nov)
+- [ ] There's no **Occasions** link, and `/occasions` shows the 404 page
 - [ ] In the Glimpse for a priced cake, tick **Bigger celebration?**: the button says **Add both** with the combined price, and both cakes land in the cart
 - [ ] Tap the **moon** in the header: the site turns navy; reload and it stays dark; tap again for light
 - [ ] (after running `0003`) Checkout → tick **Send it as a surprise**, enter a name. After paying, the order page says "Surprise for …" and admin shows the SURPRISE banner
@@ -87,7 +87,7 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 
 ## 2. Tracking
 
-- [ ] `/track-order` shows the 404 page (Track Order is switched off) and there's no Track Order link in the menu or footer
+- [ ] **Track Order** in the menu opens the delivery note page (no lookup form)
 - [ ] Open the order link from the confirmation email: the order page opens
 - [ ] Open the order link in incognito **without** the `?t=…` part: 404 (orders are private)
 

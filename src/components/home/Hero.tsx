@@ -73,10 +73,10 @@ export function Hero() {
               inert={!active}
               className={`[grid-area:1/1] transition-[opacity,visibility] duration-1000 ease-out ${active ? "visible opacity-100" : "invisible opacity-0"}`}
             >
-              <div className="mx-auto lg:grid lg:min-h-[40rem] lg:max-w-[82rem] lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-center lg:gap-12 lg:px-10 xl:min-h-[44rem]">
-                <div className="relative aspect-[5/4] overflow-hidden sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:h-[36rem] lg:overflow-visible xl:h-[40rem]">
-                  <span aria-hidden="true" className="absolute inset-y-0 right-0 left-[14%] hidden translate-x-4 translate-y-4 border border-accent/50 lg:block" />
-                  <div className="absolute inset-0 overflow-hidden lg:left-[14%]">
+              {/* Desktop: text on the left, photo filling the right side edge to edge (no frame, no gaps). */}
+              <div className="lg:grid lg:min-h-[42rem] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] xl:min-h-[46rem]">
+                <div className="relative aspect-[5/4] overflow-hidden sm:aspect-[16/9] lg:order-2 lg:aspect-auto">
+                  <div className="absolute inset-0 overflow-hidden">
                     <Image
                       src={s.image.src}
                       alt={s.image.alt}
@@ -84,7 +84,7 @@ export function Hero() {
                       preload={i === 0}
                       fetchPriority={i === 0 ? "high" : "low"}
                       loading={i === 0 ? "eager" : "lazy"}
-                      sizes="(min-width: 1280px) 600px, (min-width: 1024px) 48vw, 100vw"
+                      sizes="(min-width: 1024px) 58vw, 100vw"
                       className={`object-cover object-[50%_55%] transition-transform duration-[7000ms] ease-out ${active ? "scale-[1.06]" : "scale-100"}`}
                     />
                   </div>
@@ -92,7 +92,7 @@ export function Hero() {
                 </div>
 
                 <div
-                  className={`container-x relative -mt-10 pb-24 transition-[transform,opacity] delay-150 duration-700 ease-out sm:-mt-14 lg:mt-0 lg:px-0! lg:py-24 ${
+                  className={`container-x relative -mt-10 pb-24 transition-[transform,opacity] delay-150 duration-700 ease-out sm:-mt-14 lg:mx-0 lg:mt-0 lg:flex lg:max-w-none lg:flex-col lg:justify-center lg:py-24 lg:pr-12 lg:pl-[max(1.75rem,calc((100vw-92rem)/2+1.75rem))] ${
                     active ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
                   }`}
                 >
@@ -126,7 +126,7 @@ export function Hero() {
 
       {/* controls */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0">
-        <div className="mx-auto flex items-center gap-1 px-4 pb-5 sm:px-8 lg:max-w-[82rem] lg:px-10 lg:pb-8">
+        <div className="flex items-center gap-1 px-3 pb-5 sm:px-5 lg:pr-6 lg:pb-8 lg:pl-[max(1.75rem,calc((100vw-92rem)/2+1.75rem))]">
           <div className="pointer-events-auto flex items-center">
             {heroSlides.map((s, i) => (
               <button

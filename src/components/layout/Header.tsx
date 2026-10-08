@@ -6,11 +6,11 @@ import { BagIcon, UserIcon } from "@/components/ui/Icons";
 import { MobileMenu } from "./MobileMenu";
 import { ThemeToggle } from "./ThemeToggle";
 
-/** Boutique header: centred wordmark, icons right, the menu on its own row on desktop. */
+/** Boutique header: centred wordmark, icons right, the menu on its own row on desktop. Scrolls away with the page (Belagio-style) so the cakes get the whole screen. */
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper">
-      <div className="container-x grid h-16 grid-cols-[1fr_auto_1fr] items-center lg:h-20">
+    <header className="relative z-40 border-b border-line bg-paper">
+      <div className="container-x grid h-20 grid-cols-[1fr_auto_1fr] items-center lg:h-28">
         <div className="flex items-center">
           <MobileMenu />
         </div>

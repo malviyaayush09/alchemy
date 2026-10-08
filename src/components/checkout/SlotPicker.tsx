@@ -45,7 +45,7 @@ export function SlotPicker({ dates, closedDates = [], date, slotId, onChange, er
       {/* min-w-0: fieldsets default to min-content width and would widen the page */}
       <fieldset className="min-w-0">
         <legend className="mb-2 text-[0.875rem] font-medium text-ink">Delivery date</legend>
-        <div className="scroll-row -mx-4 px-4 pb-1 sm:mx-0 sm:px-0">
+        <div className="scroll-row -mx-3 px-3 pb-1 sm:mx-0 sm:px-0">
           {dates.map((d, i) => {
             const on = d === date;
             const closed = closedDates.includes(d);

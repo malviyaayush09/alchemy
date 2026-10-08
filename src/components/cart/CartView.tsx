@@ -98,7 +98,7 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
           ))}
         </ul>
 
-        <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+        <aside className="space-y-5 lg:sticky lg:top-6 lg:self-start">
           <div className="border border-line bg-paper-soft p-5">
             <div className="flex justify-between text-ink">
               <span>Subtotal</span>
