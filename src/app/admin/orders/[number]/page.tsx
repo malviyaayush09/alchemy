@@ -26,6 +26,13 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ num
         </p>
       </div>
 
+      {order.isSurprise ? (
+        <p role="note" className="border-2 border-ink bg-accent/30 px-4 py-3 text-ink">
+          <b>Surprise delivery</b> for {order.recipientName}
+          {order.recipientPhone ? <> ({displayPhone(order.recipientPhone)}, only if the door can&apos;t be reached)</> : null}. Seal the gift note in an envelope.
+          Tell the rider to call the customer below for directions, <b>not</b> the recipient.
+        </p>
+      ) : null}
       <section className="grid gap-4 md:grid-cols-2">
         <div className="border border-line bg-paper p-4">
           <h2 className="eyebrow text-body">Customer</h2>

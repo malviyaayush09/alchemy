@@ -1,4 +1,5 @@
 import type { Product, ProductImage, StoreSettings, Tag } from "@/lib/types";
+import { cakeDescriptions } from "@/content/cake-descriptions";
 
 /**
  * Fallback catalogue, mirroring supabase/seed.sql. Used ONLY when the database
@@ -53,7 +54,7 @@ export const fallbackProducts: Product[] = rows.map(([displayNo, slug, name, tag
   slug,
   displayNo,
   name,
-  description: "[PLACEHOLDER: description to be written by the bakery]",
+  description: cakeDescriptions[slug] ?? "[PLACEHOLDER: description to be written by the bakery]",
   kind: "cake",
   isActive: true,
   isSoldOut: false,
@@ -63,6 +64,3 @@ export const fallbackProducts: Product[] = rows.map(([displayNo, slug, name, tag
   variants: [500, 1000].map((w) => ({ id: `seed-${slug}-${w}`, weightGrams: w, pricePaise: 0, isAvailable: true })),
   images: image ? [image] : [],
 }));
-
-/** Mood image for the desktop hero. Interim; see note above. */
-export const heroImage = interim("hero-chocolate.jpg", "A glazed chocolate cake topped with two chocolate bears");

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { brand, deliveryAreaLabel } from "@/config/brand";
-import { getProducts } from "@/lib/catalog";
+import { getProducts, getSettings } from "@/lib/catalog";
 import { Artwork } from "@/components/brand/Artwork";
 import { GinkgoMark } from "@/components/brand/GinkgoMark";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 /** Lists products tagged "gift-box" (admin adds them). Until then, points to the gift note on any cake. */
 export default async function GiftBoxPage() {
   const gifts = (await getProducts()).filter((p) => p.tags.includes("gift-box"));
+  const { cakeMessageMaxChars } = await getSettings();
 
   return (
     <>
@@ -26,7 +27,7 @@ export default async function GiftBoxPage() {
           <ul className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
             {gifts.map((p) => (
               <li key={p.id} className="flex">
-                <ProductCard product={p} />
+                <ProductCard product={p} messageMax={cakeMessageMaxChars} />
               </li>
             ))}
           </ul>

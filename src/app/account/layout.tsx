@@ -17,10 +17,10 @@ export default async function AccountLayout({ children }: { children: React.Reac
         <div>
           <p className="eyebrow text-body">My Account</p>
           <h1 className="mt-1 text-[2.25rem]">{user.name ? `Hello, ${user.name.split(" ")[0]}` : "Welcome"}</h1>
-          <p className="text-[0.875rem] text-body">{user.phone ? displayPhone(user.phone) : user.email}</p>
+          <p className="text-[1rem] text-body">{user.phone ? displayPhone(user.phone) : user.email}</p>
         </div>
         <form action={logout}>
-          <button type="submit" className="min-h-11 text-[0.875rem] text-ink underline decoration-accent underline-offset-4">
+          <button type="submit" className="min-h-11 text-[1rem] text-ink underline decoration-accent underline-offset-4">
             Sign out
           </button>
         </form>

@@ -42,7 +42,7 @@ export default function AboutPage() {
                   href={family.link.href}
                   target="_blank"
                   rel="noopener"
-                  className="mt-5 inline-flex min-h-11 items-center gap-2 text-[0.8125rem] font-medium tracking-[0.14em] text-ink uppercase underline decoration-accent underline-offset-[6px]"
+                  className="mt-5 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-medium tracking-[0.14em] text-ink uppercase underline decoration-accent underline-offset-[6px]"
                 >
                   {family.link.label}
                   <span aria-hidden="true">↗</span>

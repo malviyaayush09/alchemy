@@ -38,7 +38,7 @@ export const faqGroups: FaqGroup[] = [
     items: [
       {
         q: "Where do you deliver?",
-        a: `At the moment we deliver only in ${deliveryAreaLabel}. Enter your pincode before you order and we'll confirm whether we can reach you.`,
+        a: `At the moment we deliver only in ${deliveryAreaLabel}. Your pincode is checked when you enter your delivery address at checkout.`,
       },
       {
         q: "How do I choose a delivery date and time?",
@@ -51,7 +51,7 @@ export const faqGroups: FaqGroup[] = [
       { q: "Is there a delivery charge?", a: "Any delivery charge is shown in your order summary before you pay." },
       {
         q: "How do I track my order?",
-        a: "Use Track Order with your order ID and phone number, or sign in to see all your orders. Once your cake is out for delivery we'll show the rider's details there.",
+        a: "Your confirmation email has a link to your order page, and signing in shows all your orders. Once your cake is out for delivery, the rider's details appear there.",
       },
     ],
   },

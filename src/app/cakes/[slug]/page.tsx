@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { brand, deliveryAreaLabel } from "@/config/brand";
 import { env } from "@/lib/env";
 import { getProductBySlug, getProducts, getSettings } from "@/lib/catalog";
-import { Artwork } from "@/components/brand/Artwork";
+import { PhotoPending } from "@/components/product/PhotoPending";
 import { ProductPurchase } from "@/components/product/ProductPurchase";
 import { Badge } from "@/components/ui/Badge";
 
@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     <div className="container-x pt-4 pb-32 md:pb-16 lg:pt-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <nav aria-label="Breadcrumb">
-        <ol className="flex flex-wrap gap-1.5 text-[0.8125rem] text-body">
+        <ol className="flex flex-wrap gap-1.5 text-[0.9375rem] text-body">
           <li>
             <Link href="/" className="inline-flex min-h-11 min-w-11 items-center hover:underline">
               Home
@@ -77,19 +77,19 @@ export default async function ProductPage({ params }: { params: Params }) {
         </ol>
       </nav>
 
-      <div className="mt-2 grid gap-6 md:grid-cols-2 md:gap-10 lg:gap-14">
+      <div className="mt-2 grid gap-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-10 lg:gap-16">
         <div>
-          <div className="relative aspect-[4/5] overflow-hidden border border-line bg-paper-soft">
+          <div className="relative -mx-4 aspect-[4/5] overflow-hidden bg-paper-soft sm:mx-0">
             {main ? (
-              <Image src={main.src} alt={main.alt || product.name} fill preload fetchPriority="high" sizes="(min-width: 1216px) 560px, (min-width: 768px) 46vw, 100vw" className="object-cover" />
+              <Image src={main.src} alt={main.alt || product.name} fill preload fetchPriority="high" sizes="(min-width: 1312px) 640px, (min-width: 768px) 50vw, 100vw" className="object-cover" />
             ) : (
-              <Artwork label={`Photo · ${product.name}`} shape="rect" className="size-full border-0" />
+              <PhotoPending slug={product.slug} className="absolute inset-0" />
             )}
           </div>
           {rest.length ? (
             <ul className="mt-3 grid grid-cols-4 gap-2">
               {rest.map((img) => (
-                <li key={img.src} className="relative aspect-square overflow-hidden border border-line">
+                <li key={img.src} className="relative aspect-square overflow-hidden">
                   <Image src={img.src} alt={img.alt} fill sizes="120px" className="object-cover" />
                 </li>
               ))}
@@ -97,13 +97,13 @@ export default async function ProductPage({ params }: { params: Params }) {
           ) : null}
         </div>
 
-        <div>
+        <div className="md:pt-4 lg:pt-8">
           <div className="flex flex-wrap gap-1.5">
             {product.tags.filter((t) => t !== "gift-box").map((t) => (
-              <Badge key={t} tag={t} />
+              <Badge key={t} tag={t} label={t === "egg" ? "With egg" : undefined} />
             ))}
           </div>
-          <h1 className="mt-3 text-[2.125rem] leading-tight sm:text-[2.75rem]">{product.name}</h1>
+          <h1 className="mt-4 text-[2.5rem] leading-[1.08] sm:text-[3rem] lg:text-[3.5rem]">{product.name}</h1>
           <ProductPurchase
             product={{
               id: product.id,
@@ -116,11 +116,11 @@ export default async function ProductPage({ params }: { params: Params }) {
             }}
             limits={{ message: settings.cakeMessageMaxChars, giftNote: settings.giftNoteMaxChars }}
           />
-          <section className="mt-8 border-t border-line pt-6" aria-labelledby="about-cake">
-            <h2 id="about-cake" className="eyebrow text-body">
+          <section className="mt-10 border-t border-line pt-7" aria-labelledby="about-cake">
+            <h2 id="about-cake" className="text-[1.5rem]">
               About this cake
             </h2>
-            <p className={`mt-3 text-[1rem] ${isPlaceholder ? "text-body italic" : "text-ink"}`}>{product.description}</p>
+            <p className={`mt-3 text-[1.0625rem] ${isPlaceholder ? "text-body italic" : "text-ink"}`}>{product.description}</p>
           </section>
         </div>
       </div>

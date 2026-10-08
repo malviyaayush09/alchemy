@@ -15,6 +15,7 @@ export type SavedAddress = { id: string; label: string | null; name: string; pho
 type Props = {
   brandName: string;
   brandColor: string;
+  deliveryAreaLabel: string;
   dates: string[];
   closedDates: string[];
   deliveryFeePaise: number;
@@ -22,6 +23,8 @@ type Props = {
   holdMinutes: number;
   configured: boolean;
   liveCheckout: boolean;
+  /** "Send as a surprise" (needs migration 0003). */
+  surpriseEnabled: boolean;
   user: { name: string; phone: string; email: string } | null;
   addresses: SavedAddress[];
 };
@@ -52,7 +55,7 @@ function loadRazorpay(): Promise<boolean> {
 export function CheckoutForm(p: Props) {
   const router = useRouter();
   const state = useCart();
-  const saved = p.addresses.find((a) => a.pincode === state.area?.pincode) ?? null;
+  const saved = p.addresses[0] ?? null;
 
   const [f, setF] = useState({
     name: p.user?.name || saved?.name || "",
@@ -61,10 +64,14 @@ export function CheckoutForm(p: Props) {
     line1: saved?.line1 ?? "",
     line2: saved?.line2 ?? "",
     landmark: saved?.landmark ?? "",
+    pincode: saved?.pincode ?? "",
   });
+  // Live serviceability for the typed pincode (the server re-checks at checkout).
+  const [pin, setPin] = useState<{ for: string; area: string | null } | null>(null);
   const [slot, setSlot] = useState<{ date: string | null; slotId: string | null; slotLabel: string | null }>({ date: p.dates.find((d) => !p.closedDates.includes(d)) ?? null, slotId: null, slotLabel: null });
   const [coupon, setCoupon] = useState({ code: "", applied: "", discount: 0, error: "", checking: false });
-  const [saveAddress, setSaveAddress] = useState(Boolean(p.user) && !saved);
+  const [surprise, setSurprise] = useState({ on: false, name: "", phone: "" });
+  const [saveAddress, setSaveAddress] = useState<boolean>(Boolean(p.user) && !saved);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -80,6 +87,20 @@ export function CheckoutForm(p: Props) {
     const w = window as Window & { requestIdleCallback?: (cb: () => void) => void };
     (w.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 1500)))(() => void loadRazorpay());
   }, [p.liveCheckout]);
+
+  useEffect(() => {
+    const code = f.pincode.trim();
+    if (!/^\d{6}$/.test(code) || pin?.for === code) return;
+    let live = true;
+    fetch("/api/serviceability", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pincode: code }) })
+      .then((r) => r.json())
+      .then((d: { area?: string | null }) => live && setPin({ for: code, area: d.area ?? null }))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [f.pincode, pin]);
+  const pinChecked = pin && pin.for === f.pincode.trim() ? pin : null;
 
   // A changed cart invalidates a started payment (and re-validates the coupon).
   useEffect(() => {
@@ -117,6 +138,10 @@ export function CheckoutForm(p: Props) {
     if (!/^[6-9]\d{9}$/.test(f.phone.replace(/\D/g, "").replace(/^(91|0)(?=\d{10}$)/, ""))) e.phone = "Enter a valid 10-digit mobile number.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) e.email = "Enter a valid email for order updates.";
     if (f.line1.trim().length < 3) e.line1 = "Enter your house or flat number and building.";
+    if (!/^\d{6}$/.test(f.pincode.trim())) e.pincode = "Enter your 6-digit pincode.";
+    else if (pinChecked && !pinChecked.area) e.pincode = `We don't deliver to ${f.pincode.trim()} yet. For now we deliver only in ${p.deliveryAreaLabel}.`;
+    if (surprise.on && surprise.name.trim().length < 2) e.recipientName = "Who is the surprise for? Enter their name.";
+    if (surprise.on && surprise.phone.trim() && !/^[6-9]\d{9}$/.test(surprise.phone.replace(/\D/g, "").replace(/^(91|0)(?=\d{10}$)/, ""))) e.recipientPhone = "Enter a valid 10-digit mobile number, or leave it empty.";
     if (!slot.date || !slot.slotId) e.slot = "Choose a delivery date and time slot.";
     setErrors(e);
     const first = Object.keys(e)[0];
@@ -166,11 +191,13 @@ export function CheckoutForm(p: Props) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ...f,
-          pincode: state.area?.pincode,
           date: slot.date,
           slotId: slot.slotId,
           couponCode: coupon.applied,
           saveAddress,
+          surprise: surprise.on,
+          recipientName: surprise.on ? surprise.name : "",
+          recipientPhone: surprise.on ? surprise.phone : "",
           items: state.lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity, cakeMessage: l.cakeMessage, giftNote: l.giftNote })),
         }),
       });
@@ -205,7 +232,7 @@ export function CheckoutForm(p: Props) {
     <div className="container-x pt-6 pb-40 md:pb-16 lg:pt-10">
       <h1 className="text-[2.25rem] lg:text-[2.75rem]">Checkout</h1>
       {!p.user ? (
-        <p className="mt-1 text-[0.875rem] text-body">
+        <p className="mt-1 text-[1rem] text-body">
           Checking out as a guest.{" "}
           <Link href="/login?next=/checkout" className="text-ink underline decoration-accent underline-offset-4">
             Sign in
@@ -214,7 +241,7 @@ export function CheckoutForm(p: Props) {
         </p>
       ) : null}
       {!p.configured ? (
-        <p role="alert" className="mt-4 border border-danger px-3 py-2 text-[0.875rem] text-danger">
+        <p role="alert" className="mt-4 border border-danger px-3 py-2 text-[1rem] text-danger">
           The store database isn&apos;t connected yet, so orders can&apos;t be placed.
         </p>
       ) : null}
@@ -237,29 +264,40 @@ export function CheckoutForm(p: Props) {
           </Section>
 
           <Section n={2} title="Delivery address">
-            <div className="flex items-center justify-between border border-line bg-paper-soft px-3 py-2 text-[0.875rem] text-ink">
-              <span>
-                {state.area ? (
-                  <>
-                    {state.area.area} · <b className="font-medium">{state.area.pincode}</b>
-                  </>
-                ) : (
-                  "No pincode checked"
-                )}
-              </span>
-              <Link href="/cart" className="inline-flex min-h-11 items-center underline decoration-accent underline-offset-4">
-                Change
-              </Link>
-            </div>
+            <p className="text-[1rem] text-body">We deliver in {p.deliveryAreaLabel}.</p>
+            {p.surpriseEnabled ? (
+              <div className={`border p-4 transition-colors ${surprise.on ? "border-ink bg-paper-soft" : "border-line"}`}>
+                <label className="flex cursor-pointer items-start gap-3">
+                  <input type="checkbox" checked={surprise.on} onChange={(e) => setSurprise({ ...surprise, on: e.target.checked })} className="mt-1 size-5 shrink-0 accent-[var(--brand-ink)]" />
+                  <span>
+                    <span className="block text-[1.0625rem] font-medium text-ink">Send it as a surprise</span>
+                    <span className="mt-0.5 block text-[0.9375rem] text-body">
+                      For someone else at this address. If the rider needs directions they&apos;ll call you, not them, and your gift note goes in a sealed envelope.
+                    </span>
+                  </span>
+                </label>
+                {surprise.on ? (
+                  <div className="mt-4 space-y-4">
+                    <Field id="co-recipientName" label="Who is it for?" error={errors.recipientName}>
+                      <input id="co-recipientName" className={input} value={surprise.name} onChange={(e) => { setSurprise({ ...surprise, name: e.target.value }); if (errors.recipientName) setErrors({ ...errors, recipientName: "" }); }} autoComplete="off" aria-invalid={Boolean(errors.recipientName) || undefined} />
+                    </Field>
+                    <Field id="co-recipientPhone" label="Their mobile (optional)" hint="Only used if we truly can't reach the door. We'll try you first." error={errors.recipientPhone}>
+                      <div className="flex">
+                        <span className="inline-flex min-h-12 items-center border border-r-0 border-ink/40 bg-paper-deep px-3 text-ink">+91</span>
+                        <input id="co-recipientPhone" type="tel" inputMode="tel" className={input} value={surprise.phone} onChange={(e) => { setSurprise({ ...surprise, phone: e.target.value }); if (errors.recipientPhone) setErrors({ ...errors, recipientPhone: "" }); }} maxLength={14} aria-invalid={Boolean(errors.recipientPhone) || undefined} />
+                      </div>
+                    </Field>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             {p.addresses.length ? (
               <div className="scroll-row">
-                {p.addresses
-                  .filter((a) => a.pincode === state.area?.pincode)
-                  .map((a) => (
-                    <button key={a.id} type="button" onClick={() => setF({ ...f, name: f.name || a.name, line1: a.line1, line2: a.line2 ?? "", landmark: a.landmark ?? "" })} className="min-h-11 shrink-0 border border-line px-3 text-left text-[0.8125rem] text-ink hover:border-ink">
-                      {a.label || a.line1.slice(0, 24)}
-                    </button>
-                  ))}
+                {p.addresses.map((a) => (
+                  <button key={a.id} type="button" onClick={() => setF({ ...f, name: f.name || a.name, line1: a.line1, line2: a.line2 ?? "", landmark: a.landmark ?? "", pincode: a.pincode })} className="min-h-11 shrink-0 border border-line px-3 text-left text-[0.9375rem] text-ink hover:border-ink">
+                    {a.label || a.line1.slice(0, 24)}
+                  </button>
+                ))}
               </div>
             ) : null}
             <Field id="co-line1" label="House / flat no., building" error={errors.line1}>
@@ -271,9 +309,29 @@ export function CheckoutForm(p: Props) {
             <Field id="co-landmark" label="Landmark (optional)">
               <input id="co-landmark" className={input} value={f.landmark} onChange={set("landmark")} />
             </Field>
+            <Field
+              id="co-pincode"
+              label="Pincode"
+              error={errors.pincode || (pinChecked && !pinChecked.area ? `We don't deliver to ${pinChecked.for} yet. For now we deliver only in ${p.deliveryAreaLabel}.` : undefined)}
+              hint={pinChecked?.area ? `✓ We deliver to ${pinChecked.area}.` : undefined}
+            >
+              <input
+                id="co-pincode"
+                className={`${input} max-w-[12rem] tabular-nums`}
+                value={f.pincode}
+                onChange={(e) => {
+                  setF({ ...f, pincode: e.target.value.replace(/\D/g, "").slice(0, 6) });
+                  if (errors.pincode) setErrors({ ...errors, pincode: "" });
+                }}
+                inputMode="numeric"
+                autoComplete="postal-code"
+                maxLength={6}
+                aria-invalid={Boolean(errors.pincode) || Boolean(pinChecked && !pinChecked.area) || undefined}
+              />
+            </Field>
             {p.user ? (
               <label className="flex min-h-11 items-center gap-3 text-[0.9375rem] text-ink">
-                <input type="checkbox" checked={saveAddress} onChange={(e) => setSaveAddress(e.target.checked)} className="size-5 accent-[var(--color-ink)]" />
+                <input type="checkbox" checked={saveAddress} onChange={(e) => setSaveAddress(e.target.checked)} className="size-5 accent-[var(--brand-ink)]" />
                 Save this address to my account
               </label>
             ) : null}
@@ -295,7 +353,7 @@ export function CheckoutForm(p: Props) {
                     <p className="text-ink">
                       {l.quantity} × {l.name}
                     </p>
-                    <p className="text-[0.8125rem] text-body">
+                    <p className="text-[0.9375rem] text-body">
                       {weightLabel(l.weightGrams)}
                       {l.cakeMessage ? ` · “${l.cakeMessage}”` : ""}
                       {l.giftNote ? " · Gift note" : ""}
@@ -307,7 +365,7 @@ export function CheckoutForm(p: Props) {
             </ul>
 
             <div>
-              <label htmlFor="co-coupon" className="mb-1.5 block text-[0.875rem] font-medium text-ink">
+              <label htmlFor="co-coupon" className="mb-1.5 block text-[1rem] font-medium text-ink">
                 Coupon code
               </label>
               <div className="flex gap-2">
@@ -316,7 +374,7 @@ export function CheckoutForm(p: Props) {
                   Apply
                 </button>
               </div>
-              <p id="co-coupon-msg" className="mt-1.5 text-[0.8125rem]" role="status">
+              <p id="co-coupon-msg" className="mt-1.5 text-[0.9375rem]" role="status">
                 {coupon.error ? <span className="text-danger">{coupon.error}</span> : coupon.applied ? <span className="text-ink">{coupon.applied} applied.</span> : null}
               </p>
             </div>
@@ -330,17 +388,17 @@ export function CheckoutForm(p: Props) {
                 <dd className="tabular-nums">{formatPaise(total)}</dd>
               </div>
             </dl>
-            {p.minOrderPaise > subtotal ? <p className="text-[0.875rem] text-danger">Minimum order is {formatPaise(p.minOrderPaise)}.</p> : null}
+            {p.minOrderPaise > subtotal ? <p className="text-[1rem] text-danger">Minimum order is {formatPaise(p.minOrderPaise)}.</p> : null}
 
             {formError ? (
-              <p role="alert" className="border border-danger px-3 py-2 text-[0.875rem] text-danger">
+              <p role="alert" className="border border-danger px-3 py-2 text-[1rem] text-danger">
                 {formError}
               </p>
             ) : null}
 
             {pending?.devPayment ? (
               <div className="border border-dashed border-detail p-4">
-                <p className="text-[0.875rem] text-ink">
+                <p className="text-[1rem] text-ink">
                   <b>Development mode:</b> Razorpay test keys aren&apos;t set. Order {pending.orderNumber} is waiting for payment.
                 </p>
                 <button type="button" onClick={simulate} disabled={busy} className={`${buttonClasses("outline", "md", true)} mt-3`}>
@@ -349,17 +407,17 @@ export function CheckoutForm(p: Props) {
               </div>
             ) : null}
 
-            <button type="submit" disabled={busy || !p.configured || !state.area || p.minOrderPaise > subtotal || Boolean(pending?.devPayment)} className={`${buttonClasses("primary", "lg", true)} hidden md:inline-flex`}>
+            <button type="submit" disabled={busy || !p.configured || p.minOrderPaise > subtotal || Boolean(pending?.devPayment)} className={`${buttonClasses("primary", "lg", true)} max-md:hidden`}>
               {payLabel}
             </button>
-            <p className="text-[0.75rem] text-body">Prepaid only · UPI, cards and netbanking via Razorpay. Your order is confirmed once payment is verified.</p>
+            <p className="text-[0.8125rem] text-body">Prepaid only · UPI, cards and netbanking via Razorpay. Your order is confirmed once payment is verified.</p>
           </Section>
         </aside>
       </form>
 
       {/* Thumb-zone pay bar (phones) */}
       <div ref={stickyBarRef} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgb(0_0_0/0.25)] md:hidden">
-        <button type="submit" form="checkout-form" disabled={busy || !p.configured || !state.area || p.minOrderPaise > subtotal || Boolean(pending?.devPayment)} className={buttonClasses("primary", "lg", true)}>
+        <button type="submit" form="checkout-form" disabled={busy || !p.configured || p.minOrderPaise > subtotal || Boolean(pending?.devPayment)} className={buttonClasses("primary", "lg", true)}>
           {payLabel}
         </button>
       </div>
@@ -384,16 +442,16 @@ function Section({ n, title, children }: { n: number; title: string; children: R
 function Field({ id, label, hint, error, children }: { id: string; label: string; hint?: string; error?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="block text-[0.875rem] font-medium text-ink">
+      <label htmlFor={id} className="block text-[1rem] font-medium text-ink">
         {label}
       </label>
       {children}
       {error ? (
-        <p className="text-[0.8125rem] text-danger" role="alert">
+        <p className="text-[0.9375rem] text-danger" role="alert">
           {error}
         </p>
       ) : hint ? (
-        <p className="text-[0.8125rem] text-body">{hint}</p>
+        <p className="text-[0.9375rem] text-body">{hint}</p>
       ) : null}
     </div>
   );

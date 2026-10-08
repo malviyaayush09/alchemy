@@ -32,7 +32,7 @@ export function MobileMenu() {
       <dialog
         ref={ref}
         aria-label="Menu"
-        className="m-0 h-dvh max-h-none w-[min(22rem,88vw)] max-w-none bg-paper p-0 text-ink backdrop:bg-ink/60 open:flex open:flex-col"
+        className="m-0 h-dvh max-h-none w-[min(22rem,88vw)] max-w-none bg-paper p-0 text-ink backdrop:bg-[#05070d]/60 open:flex open:flex-col"
         onClick={(e) => {
           if (e.target === ref.current) ref.current?.close();
         }}
@@ -59,7 +59,7 @@ export function MobileMenu() {
             </li>
           </ul>
         </nav>
-        <p className="border-t border-line px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-[0.8125rem] text-body">
+        <p className="border-t border-line px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-[0.9375rem] text-body">
           {brand.tagline}
           <br />
           Delivering in {deliveryAreaLabel}

@@ -20,13 +20,11 @@ export type CartLine = {
   image: { src: string; width: number; height: number } | null;
 };
 
-export type ServiceArea = { pincode: string; area: string };
-
-type State = { lines: CartLine[]; area: ServiceArea | null; lastAdded: { name: string; at: number } | null; pendingAdd: Omit<CartLine, "key" | "quantity"> | null };
+type State = { lines: CartLine[]; lastAdded: { name: string; at: number } | null };
 
 const KEY = "cart:v1";
 const MAX_QTY = 20;
-const EMPTY: State = { lines: [], area: null, lastAdded: null, pendingAdd: null };
+const EMPTY: State = { lines: [], lastAdded: null };
 
 let state: State = EMPTY;
 let loaded = false;
@@ -39,7 +37,7 @@ function load() {
     const raw = window.localStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<State>;
-      state = { lines: Array.isArray(parsed.lines) ? parsed.lines : [], area: parsed.area ?? null, lastAdded: null, pendingAdd: null };
+      state = { lines: Array.isArray(parsed.lines) ? parsed.lines : [], lastAdded: null };
     }
   } catch {
     state = EMPTY;
@@ -59,7 +57,7 @@ function emit() {
 function save(next: State) {
   state = next;
   try {
-    window.localStorage.setItem(KEY, JSON.stringify({ lines: next.lines, area: next.area }));
+    window.localStorage.setItem(KEY, JSON.stringify({ lines: next.lines }));
   } catch {
     /* private mode / quota: cart still works for this tab */
   }
@@ -106,23 +104,6 @@ export const cart = {
   },
   clear() {
     save({ ...state, lines: [] });
-  },
-  /** Add now if a pincode is known; otherwise park the line for the shared pincode dialog. */
-  request(line: Omit<CartLine, "key" | "quantity">) {
-    if (state.area) cart.add(line);
-    else {
-      state = { ...state, pendingAdd: line };
-      emit();
-    }
-  },
-  cancelPending() {
-    state = { ...state, pendingAdd: null };
-    emit();
-  },
-  setArea(area: ServiceArea | null) {
-    const pending = state.pendingAdd;
-    save({ ...state, area, pendingAdd: null });
-    if (area && pending) cart.add(pending);
   },
   dismissToast() {
     state = { ...state, lastAdded: null };

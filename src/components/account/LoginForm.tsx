@@ -53,12 +53,12 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
           Enter the 6-digit code sent to <b className="font-medium">{channel === "sms" ? `+91 ${destination.replace(/\D/g, "").slice(-10)}` : destination}</b>.
         </p>
         {devCode ? (
-          <p className="border border-dashed border-detail px-3 py-2 text-[0.8125rem] text-ink">
+          <p className="border border-dashed border-detail px-3 py-2 text-[0.9375rem] text-ink">
             Development mode (mock SMS): your code is <b className="tracking-[0.2em]">{devCode}</b>
           </p>
         ) : null}
         <div className="space-y-1.5">
-          <label htmlFor="otp" className="block text-[0.875rem] font-medium text-ink">
+          <label htmlFor="otp" className="block text-[1rem] font-medium text-ink">
             One-time code
           </label>
           <input
@@ -76,14 +76,14 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
           />
         </div>
         {error ? (
-          <p role="alert" className="text-[0.875rem] text-danger">
+          <p role="alert" className="text-[1rem] text-danger">
             {error}
           </p>
         ) : null}
         <button type="submit" disabled={busy || code.length !== 6} className={buttonClasses("primary", "lg", true)}>
           {busy ? "Checking…" : "Sign in"}
         </button>
-        <div className="flex justify-between text-[0.875rem]">
+        <div className="flex justify-between text-[1rem]">
           <button type="button" className="min-h-11 text-ink underline decoration-accent underline-offset-4" onClick={() => setStep("ask")}>
             Change {channel === "sms" ? "number" : "email"}
           </button>
@@ -99,7 +99,7 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
     <form onSubmit={send} className="space-y-5">
       {channel === "sms" ? (
         <div className="space-y-1.5">
-          <label htmlFor="dest" className="block text-[0.875rem] font-medium text-ink">
+          <label htmlFor="dest" className="block text-[1rem] font-medium text-ink">
             Mobile number
           </label>
           <div className="flex">
@@ -109,14 +109,14 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
         </div>
       ) : (
         <div className="space-y-1.5">
-          <label htmlFor="dest" className="block text-[0.875rem] font-medium text-ink">
+          <label htmlFor="dest" className="block text-[1rem] font-medium text-ink">
             Email
           </label>
           <input id="dest" type="email" inputMode="email" autoComplete="email" className={input} value={destination} onChange={(e) => setDestination(e.target.value)} aria-invalid={Boolean(error) || undefined} required />
         </div>
       )}
       {error ? (
-        <p role="alert" className="text-[0.875rem] text-danger">
+        <p role="alert" className="text-[1rem] text-danger">
           {error}
         </p>
       ) : null}
@@ -126,7 +126,7 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
       {phoneAvailable ? (
         <button
           type="button"
-          className="min-h-11 text-[0.875rem] text-ink underline decoration-accent underline-offset-4"
+          className="min-h-11 text-[1rem] text-ink underline decoration-accent underline-offset-4"
           onClick={() => {
             setChannel(channel === "sms" ? "email" : "sms");
             setDestination("");
@@ -136,7 +136,7 @@ export function LoginForm({ next, phoneAvailable }: { next: string; phoneAvailab
           {channel === "sms" ? "Use email instead" : "Use phone instead"}
         </button>
       ) : (
-        <p className="text-[0.8125rem] text-body">Phone sign-in is coming soon.</p>
+        <p className="text-[0.9375rem] text-body">Phone sign-in is coming soon.</p>
       )}
     </form>
   );

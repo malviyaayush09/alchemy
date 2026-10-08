@@ -55,17 +55,17 @@ export function ConsentBanner() {
       {open ? (
         <div role="region" aria-label="Analytics consent" className="on-ink fixed inset-x-0 bottom-[var(--sticky-bar-h,0px)] z-50 border-t border-accent bg-ink px-4 pt-3 pb-[max(0.75rem,calc(env(safe-area-inset-bottom)-var(--sticky-bar-h,0px)))] text-paper">
           <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[0.875rem] text-paper/90">
+            <p className="text-[1rem] text-paper/90">
               May we use cookie-free analytics to improve this site?{" "}
               <Link href="/privacy-policy" className="text-accent underline underline-offset-4">
                 Privacy policy
               </Link>
             </p>
             <div className="flex shrink-0 gap-2">
-              <button type="button" onClick={() => decide("denied")} className="min-h-11 flex-1 border border-accent px-5 text-[0.8125rem] font-medium uppercase tracking-[0.12em] text-paper sm:flex-none">
+              <button type="button" onClick={() => decide("denied")} className="min-h-11 flex-1 border border-accent px-5 text-[0.9375rem] font-medium uppercase tracking-[0.12em] text-paper sm:flex-none">
                 Decline
               </button>
-              <button type="button" onClick={() => decide("granted")} className="min-h-11 flex-1 bg-accent px-5 text-[0.8125rem] font-medium uppercase tracking-[0.12em] text-ink sm:flex-none">
+              <button type="button" onClick={() => decide("granted")} className="min-h-11 flex-1 bg-accent px-5 text-[0.9375rem] font-medium uppercase tracking-[0.12em] text-ink sm:flex-none">
                 Accept
               </button>
             </div>

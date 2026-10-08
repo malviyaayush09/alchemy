@@ -21,8 +21,8 @@ export function ProfileForm({ name, email, emailLocked }: { name: string; email:
       ) : (
         <TextField id="p-email" name="email" type="email" inputMode="email" label="Email (for order updates)" defaultValue={email} autoComplete="email" />
       )}
-      {state?.error ? <p role="alert" className="text-[0.875rem] text-danger">{state.error}</p> : null}
-      {state?.ok ? <p role="status" className="text-[0.875rem] text-ink">Saved.</p> : null}
+      {state?.error ? <p role="alert" className="text-[1rem] text-danger">{state.error}</p> : null}
+      {state?.ok ? <p role="status" className="text-[1rem] text-ink">Saved.</p> : null}
       <button type="submit" disabled={pending} className={buttonClasses("primary", "md", true)}>
         {pending ? "Saving…" : "Save"}
       </button>

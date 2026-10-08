@@ -38,7 +38,7 @@ export function StatusTimeline({ order }: { order: Order }) {
                   {statusLabel[s]}
                   <span className="sr-only">{current ? " (current)" : done ? " (done)" : " (upcoming)"}</span>
                 </p>
-                {at ? <p className="text-[0.8125rem] text-body">{formatStamp(at)}</p> : null}
+                {at ? <p className="text-[0.9375rem] text-body">{formatStamp(at)}</p> : null}
               </div>
             </li>
           );

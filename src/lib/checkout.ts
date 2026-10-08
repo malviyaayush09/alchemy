@@ -1,4 +1,5 @@
 import { brand } from "@/config/brand";
+import { dbSupports } from "./capabilities";
 import { getProducts, getSettings } from "./catalog";
 import { db } from "./db";
 import { devToolsEnabled, isRazorpayConfigured } from "./env";
@@ -24,6 +25,9 @@ export type CheckoutInput = {
   slotId?: unknown;
   couponCode?: unknown;
   saveAddress?: unknown;
+  surprise?: unknown;
+  recipientName?: unknown;
+  recipientPhone?: unknown;
   items?: unknown;
 };
 
@@ -85,6 +89,14 @@ export async function createCheckout(input: CheckoutInput, userId: string | null
   if (line1.length < 3) throw new ValidationError("line1", "Enter your house or flat number and building.");
   const line2 = cleanText(input.line2, 160);
   const landmark = cleanText(input.landmark, 120);
+  // Surprise delivery: the address is the recipient's; the orderer stays the contact.
+  const surprise = input.surprise === true && (await dbSupports("surprise"));
+  const recipientName = surprise ? cleanText(input.recipientName, 80) : "";
+  if (surprise && recipientName.length < 2) throw new ValidationError("recipientName", "Who is the surprise for? Enter their name.");
+  const rawRecipientPhone = surprise ? cleanText(input.recipientPhone, 20) : "";
+  const recipientPhone = rawRecipientPhone ? normalizePhone(rawRecipientPhone) : null;
+  if (rawRecipientPhone && !recipientPhone) throw new ValidationError("recipientPhone", "Enter a valid 10-digit mobile number, or leave it empty.");
+
   const pincode = String(input.pincode ?? "");
   const area = await checkPincode(pincode);
   if (!area) throw new ValidationError("pincode", "We don't deliver to this pincode yet.");
@@ -167,6 +179,11 @@ export async function createCheckout(input: CheckoutInput, userId: string | null
     throw new Error(`create_pending_order: ${m}`);
   }
   const created = (data as { order_id: string; order_number: string }[])[0];
+
+  if (surprise) {
+    const s = await db().from("orders").update({ is_surprise: true, recipient_name: recipientName, recipient_phone: recipientPhone }).eq("id", created.order_id);
+    if (s.error) throw new Error(`mark surprise: ${s.error.message}`);
+  }
 
   let razorpay: CheckoutResult["razorpay"] = null;
   let rzpOrderId: string;

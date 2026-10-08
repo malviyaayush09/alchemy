@@ -15,6 +15,7 @@ const TABLES = [
   "users", "addresses", "products", "product_variants", "tags", "product_tags", "product_images",
   "serviceable_pincodes", "notify_requests", "delivery_slots", "closed_dates", "store_settings", "coupons",
   "orders", "order_items", "order_status_events", "payment_events", "notification_log", "invoice_counters",
+  "celebration_reminders",
 ];
 // Not backed up on purpose: sessions, otp_codes, rate_limits (short-lived security data).
 

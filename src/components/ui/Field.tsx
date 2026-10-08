@@ -11,18 +11,18 @@ function FieldWrap({ label, hint, error, id, children, counter }: Wrap) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-3">
-        <label htmlFor={id} className="text-[0.875rem] font-medium text-ink">
+        <label htmlFor={id} className="text-[1rem] font-medium text-ink">
           {label}
         </label>
         {counter}
       </div>
       {children}
       {error ? (
-        <p id={`${id}-error`} className="text-[0.8125rem] text-danger" role="alert">
+        <p id={`${id}-error`} className="text-[0.9375rem] text-danger" role="alert">
           {error}
         </p>
       ) : hint ? (
-        <p id={`${id}-hint`} className="text-[0.8125rem] text-body">
+        <p id={`${id}-hint`} className="text-[0.9375rem] text-body">
           {hint}
         </p>
       ) : null}
@@ -58,7 +58,7 @@ export function TextArea({ id, label, hint, error, maxLength, className = "", ..
       label={label}
       hint={hint}
       error={error}
-      counter={maxLength ? <span className="text-[0.8125rem] text-body">Up to {maxLength} characters</span> : null}
+      counter={maxLength ? <span className="text-[0.9375rem] text-body">Up to {maxLength} characters</span> : null}
     >
       <textarea
         id={id}

@@ -4,11 +4,11 @@ import { brand, deliveryAreaLabel } from "@/config/brand";
 import { env } from "@/lib/env";
 import { fontVariables } from "@/config/fonts";
 import { CartToast } from "@/components/cart/CartToast";
-import { PincodeGate } from "@/components/cart/PincodeGate";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { ConsentBanner } from "@/components/layout/ConsentBanner";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { themeInitScript } from "@/components/layout/ThemeToggle";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import "./globals.css";
 
@@ -43,7 +43,10 @@ const brandVars = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={fontVariables} style={brandVars}>
+    <html lang="en-IN" className={fontVariables} style={brandVars} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <a
           href="#main"
@@ -57,7 +60,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <WhatsAppButton />
         <CartToast />
-        <PincodeGate />
         <ConsentBanner />
       </body>
     </html>

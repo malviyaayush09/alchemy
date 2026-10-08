@@ -10,7 +10,7 @@ export function SortSelect({ value, tag }: { value: SortKey; tag: string | null 
   return (
     <form action="/collections" method="get" className="flex items-center gap-2">
       {tag ? <input type="hidden" name="tag" value={tag} /> : null}
-      <label htmlFor="sort" className="text-[0.8125rem] text-body">
+      <label htmlFor="sort" className="text-[0.9375rem] text-body">
         Sort
       </label>
       <span className="relative">
@@ -35,7 +35,7 @@ export function SortSelect({ value, tag }: { value: SortKey; tag: string | null 
         <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-ink" />
       </span>
       <noscript>
-        <button type="submit" className="min-h-11 border border-ink px-3 text-[0.8125rem]">
+        <button type="submit" className="min-h-11 border border-ink px-3 text-[0.9375rem]">
           Apply
         </button>
       </noscript>

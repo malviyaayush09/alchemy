@@ -100,6 +100,9 @@ export default async function KitchenSheetPage({ searchParams }: { searchParams:
                       ))}
                     </ul>
                     <div className="mt-3 border-t border-line pt-2 text-[0.875rem] text-ink">
+                      {o.isSurprise ? (
+                        <p className="mb-1 font-medium uppercase tracking-[0.08em]">Surprise for {o.recipientName} · sealed envelope · rider calls customer</p>
+                      ) : null}
                       <p>
                         {o.customerName} ·{" "}
                         <a href={`tel:${o.phone}`} className="underline underline-offset-2">

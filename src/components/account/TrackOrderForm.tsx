@@ -27,19 +27,19 @@ export function TrackOrderForm() {
   return (
     <form onSubmit={submit} className="space-y-5">
       <div className="space-y-1.5">
-        <label htmlFor="t-order" className="block text-[0.875rem] font-medium text-ink">
+        <label htmlFor="t-order" className="block text-[1rem] font-medium text-ink">
           Order ID
         </label>
         <input id="t-order" className={`${input} uppercase`} value={orderNumber} onChange={(e) => setOrderNumber(e.target.value.toUpperCase())} placeholder="e.g. ALC-001001" autoCapitalize="characters" autoComplete="off" required />
       </div>
       <div className="space-y-1.5">
-        <label htmlFor="t-phone" className="block text-[0.875rem] font-medium text-ink">
+        <label htmlFor="t-phone" className="block text-[1rem] font-medium text-ink">
           Phone number
         </label>
         <input id="t-phone" type="tel" inputMode="tel" autoComplete="tel" className={input} value={phone} onChange={(e) => setPhone(e.target.value)} required />
       </div>
       {error ? (
-        <p role="alert" className="text-[0.875rem] text-danger">
+        <p role="alert" className="text-[1rem] text-danger">
           {error}
         </p>
       ) : null}

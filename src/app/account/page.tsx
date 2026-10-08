@@ -26,15 +26,15 @@ export default async function AccountOrdersPage() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-medium text-ink">{o.orderNumber}</p>
-                <p className="text-[0.875rem] text-body">
+                <p className="text-[1rem] text-body">
                   {dayMonth(o.deliveryDate)} · {o.slotLabel}
                 </p>
               </div>
-              <span className={`border px-2 py-0.5 text-[0.75rem] font-medium uppercase tracking-[0.1em] ${o.status === "cancelled" || o.status === "refunded" ? "border-danger text-danger" : "border-ink text-ink"}`}>
+              <span className={`border px-2 py-0.5 text-[0.8125rem] font-medium uppercase tracking-[0.1em] ${o.status === "cancelled" || o.status === "refunded" ? "border-danger text-danger" : "border-ink text-ink"}`}>
                 {statusLabel[o.status]}
               </span>
             </div>
-            <p className="mt-2 line-clamp-1 text-[0.875rem] text-body">{o.items.map((i) => i.productName).join(", ")}</p>
+            <p className="mt-2 line-clamp-1 text-[1rem] text-body">{o.items.map((i) => i.productName).join(", ")}</p>
             <p className="mt-1 text-[0.9375rem] tabular-nums text-ink">{formatPaise(o.totalPaise)}</p>
           </Link>
         </li>

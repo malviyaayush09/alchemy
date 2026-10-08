@@ -29,7 +29,7 @@ export function SegmentedControl({ name, legend, options, defaultValue, hideLege
               className="peer sr-only"
             />
             <span
-              className={`flex min-h-11 items-center justify-center px-2 text-[0.8125rem] text-ink transition-colors peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+              className={`flex min-h-11 items-center justify-center px-2 text-[0.9375rem] text-ink transition-colors peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
                 i > 0 ? "border-l border-ink" : ""
               }`}
             >

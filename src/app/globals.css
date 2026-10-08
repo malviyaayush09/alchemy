@@ -25,7 +25,8 @@
   --color-detail: var(--brand-detail);
   --color-body: var(--brand-body);
   /* Derived tints, never new hues */
-  --color-paper-soft: color-mix(in oklab, var(--brand-paper) 55%, white);
+  /* --brand-soft: how much paper stays in the lighter tint (55% light; dark mode raises it). */
+  --color-paper-soft: color-mix(in oklab, var(--brand-paper) var(--brand-soft, 55%), white);
   --color-paper-deep: color-mix(in oklab, var(--brand-paper) 90%, var(--brand-detail));
   --color-ink-soft: color-mix(in oklab, var(--brand-ink) 88%, white);
   --color-line: color-mix(in oklab, var(--brand-accent) 70%, var(--brand-paper));
@@ -40,17 +41,23 @@
 }
 
 @layer base {
+  /* Base styles read --brand-* directly (not --color-*, which resolve on :root) so occasion pages can re-theme them. */
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-padding-top: 5rem;
   }
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: 9rem;
+    }
+  }
   body {
-    background: var(--color-paper);
+    background: var(--brand-paper);
     color: var(--color-body);
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.0625rem;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
   }
@@ -59,9 +66,9 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    color: var(--color-ink);
-    font-weight: 400;
-    line-height: 1.15;
+    color: var(--brand-ink);
+    font-weight: 500;
+    line-height: 1.12;
     text-wrap: balance;
   }
   p {
@@ -83,22 +90,22 @@
     font-size: max(16px, 1rem);
   }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--brand-accent);
     outline-offset: 3px;
   }
   .on-ink :focus-visible {
-    outline-color: var(--color-paper);
+    outline-color: var(--brand-paper);
   }
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-ink);
+    background: var(--brand-accent);
+    color: var(--brand-ink);
   }
 }
 
 @layer components {
   .container-x {
     width: 100%;
-    max-width: 76rem;
+    max-width: 82rem;
     margin-inline: auto;
     padding-inline: max(1rem, env(safe-area-inset-left));
   }
@@ -113,12 +120,12 @@
     }
   }
 
-  /* Small letter-spaced label. 12px floor for legibility. */
+  /* Small letter-spaced label. 13px floor for legibility. */
   .eyebrow {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     line-height: 1.4;
   }
@@ -154,6 +161,107 @@
   }
 }
 
+/*
+ * Dark mode: opt-in from the header toggle (light stays the default; the
+ * cream-and-navy is the brand). Overrides the --brand-* sources, which beat
+ * the inline brand values via !important. Admin is excluded.
+ */
+:root[data-theme="dark"]:not(:has(.admin-shell)) {
+  --brand-paper: #10192c !important;
+  --brand-ink: #eee4d6 !important;
+  --brand-body: #c5bdb1 !important;
+  --brand-accent: #c9ad6c !important;
+  --brand-detail: #b9935f !important;
+  --brand-soft: 90%;
+  color-scheme: dark;
+}
+/* Dark sections (hero, footer, bands) go deeper than the page, with cream text. */
+:root[data-theme="dark"]:not(:has(.admin-shell)) .on-ink {
+  --brand-ink: #080e1b;
+  --brand-paper: #eee4d6;
+}
+/* Occasion themes get an evening version of their own colours. */
+:root[data-theme="dark"] .occasion-theme {
+  --brand-paper: color-mix(in oklab, var(--occ-ink) 62%, #05070d) !important;
+  --brand-ink: var(--occ-paper) !important;
+  --brand-body: color-mix(in oklab, var(--occ-paper) 80%, var(--occ-ink)) !important;
+  --brand-soft: 90%;
+}
+:root[data-theme="dark"] .occasion-theme .on-ink {
+  --brand-ink: color-mix(in oklab, var(--occ-ink) 70%, black) !important;
+  --brand-paper: var(--occ-paper) !important;
+}
+
+/* Glimpse quick view opening. */
+@keyframes glimpse-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Occasion motifs (OccasionMotif.tsx). The reduced-motion rule below freezes them. */
+@keyframes motif-fall {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(var(--drift, 20px), 46rem, 0);
+  }
+}
+@keyframes motif-sway {
+  0%,
+  100% {
+    transform: rotate(-25deg);
+  }
+  50% {
+    transform: rotate(25deg);
+  }
+}
+@keyframes motif-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes motif-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1);
+    opacity: 0.92;
+  }
+  35% {
+    transform: scale(0.94, 1.08);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(1.05, 0.95);
+    opacity: 0.85;
+  }
+}
+.motif-fall {
+  animation: motif-fall linear infinite;
+  opacity: 0.85;
+}
+.motif-sway {
+  animation: motif-sway 4.5s ease-in-out infinite;
+}
+.motif-twinkle {
+  animation: motif-twinkle ease-in-out infinite;
+}
+.motif-flicker {
+  animation: motif-flicker 1.6s ease-in-out infinite;
+}
+
 /* Printing (kitchen sheet): only the sheet, on white. */
 @media print {
   body:has(.kitchen-sheet) > :not(main),
@@ -167,6 +275,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Motifs stop entirely (a 0.01ms infinite loop would flicker); falling pieces then rest out of view. */
+  .motif-fall,
+  .motif-sway,
+  .motif-twinkle,
+  .motif-flicker {
+    animation: none !important;
+  }
   *,
   *::before,
   *::after {

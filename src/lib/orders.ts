@@ -45,6 +45,10 @@ export type Order = {
   invoiceNo: string | null;
   invoiceDate: string | null;
   razorpayOrderId: string | null;
+  /** Surprise delivery (migration 0003): the address is the recipient's; the rider calls the orderer. */
+  isSurprise: boolean;
+  recipientName: string | null;
+  recipientPhone: string | null;
   createdAt: string;
   items: OrderItem[];
   events: OrderEvent[];
@@ -87,6 +91,9 @@ export function mapOrder(r: any): Order {
     invoiceNo: r.invoice_no,
     invoiceDate: r.invoice_date,
     razorpayOrderId: r.razorpay_order_id,
+    isSurprise: r.is_surprise === true,
+    recipientName: r.recipient_name ?? null,
+    recipientPhone: r.recipient_phone ?? null,
     createdAt: r.created_at,
     items: (r.order_items ?? []).map((i: any) => ({
       id: i.id,

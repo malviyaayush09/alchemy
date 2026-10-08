@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { brand } from "@/config/brand";
+import { features } from "@/config/features";
 import { currentUser } from "@/lib/auth/session";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TrackOrderForm } from "@/components/account/TrackOrderForm";
@@ -9,6 +11,7 @@ export const metadata: Metadata = { title: "Track Order", description: `Track yo
 export const dynamic = "force-dynamic";
 
 export default async function TrackOrderPage() {
+  if (!features.trackOrder) notFound();
   const user = await currentUser();
   return (
     <>

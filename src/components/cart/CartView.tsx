@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { deliveryAreaLabel } from "@/config/brand";
 import { weightLabel } from "@/lib/types";
 import { Artwork } from "@/components/brand/Artwork";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { formatPaise } from "@/components/ui/Price";
 import { stickyBarRef } from "@/components/ui/useStickyBar";
 import { cart, cartSubtotal, useCart } from "./cart-store";
-import { PincodeChecker } from "./PincodeChecker";
 
 export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
   const state = useCart();
@@ -53,7 +53,7 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
     <div className="container-x pt-6 pb-36 md:pb-16 lg:pt-10">
       <h1 className="text-[2.25rem] lg:text-[2.75rem]">Your cart</h1>
       {notice ? (
-        <p role="status" className="mt-3 border border-detail bg-paper-soft px-3 py-2 text-[0.875rem] text-ink">
+        <p role="status" className="mt-3 border border-detail bg-paper-soft px-3 py-2 text-[1rem] text-ink">
           {notice}
         </p>
       ) : null}
@@ -71,12 +71,12 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
                     <Link href={`/cakes/${l.slug}`} className="font-display text-[1.25rem] leading-snug text-ink hover:underline">
                       {l.name}
                     </Link>
-                    <p className="text-[0.875rem] text-body">{weightLabel(l.weightGrams)}</p>
+                    <p className="text-[1rem] text-body">{weightLabel(l.weightGrams)}</p>
                   </div>
                   <p className="shrink-0 font-medium tabular-nums text-ink">{formatPaise(l.unitPaise * l.quantity)}</p>
                 </div>
-                {l.cakeMessage ? <p className="mt-1 text-[0.8125rem] text-body">Message: “{l.cakeMessage}”</p> : null}
-                {l.giftNote ? <p className="mt-0.5 line-clamp-2 text-[0.8125rem] text-body">Gift note: “{l.giftNote}”</p> : null}
+                {l.cakeMessage ? <p className="mt-1 text-[0.9375rem] text-body">Message: “{l.cakeMessage}”</p> : null}
+                {l.giftNote ? <p className="mt-0.5 line-clamp-2 text-[0.9375rem] text-body">Gift note: “{l.giftNote}”</p> : null}
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="inline-flex items-center border border-ink" role="group" aria-label={`Quantity for ${l.name}`}>
                     <button type="button" className="inline-flex size-11 items-center justify-center text-[1.25rem] text-ink disabled:opacity-40" onClick={() => cart.setQuantity(l.key, l.quantity - 1)} disabled={l.quantity <= 1} aria-label="Decrease quantity">
@@ -89,7 +89,7 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
                       +
                     </button>
                   </div>
-                  <button type="button" className="min-h-11 text-[0.8125rem] text-body underline underline-offset-4 hover:text-ink" onClick={() => cart.remove(l.key)}>
+                  <button type="button" className="min-h-11 text-[0.9375rem] text-body underline underline-offset-4 hover:text-ink" onClick={() => cart.remove(l.key)}>
                     Remove
                   </button>
                 </div>
@@ -99,22 +99,20 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
         </ul>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <PincodeChecker />
           <div className="border border-line bg-paper-soft p-5">
             <div className="flex justify-between text-ink">
               <span>Subtotal</span>
               <span className="font-medium tabular-nums">{formatPaise(subtotal)}</span>
             </div>
-            <p className="mt-2 text-[0.8125rem] text-body">Delivery charge and coupons are applied at checkout.</p>
-            {belowMin ? <p className="mt-3 text-[0.875rem] text-danger">Minimum order is {formatPaise(minOrderPaise)}.</p> : null}
+            <p className="mt-2 text-[0.9375rem] text-body">Delivery charge and coupons are applied at checkout. We deliver in {deliveryAreaLabel}.</p>
+            {belowMin ? <p className="mt-3 text-[1rem] text-danger">Minimum order is {formatPaise(minOrderPaise)}.</p> : null}
             <Link
               href="/checkout"
-              aria-disabled={!state.area || belowMin || undefined}
-              className={`${buttonClasses("primary", "lg", true)} mt-4 hidden md:inline-flex`}
+              aria-disabled={belowMin || undefined}
+              className={`${buttonClasses("primary", "lg", true)} mt-4 max-md:hidden`}
             >
               Checkout
             </Link>
-            {!state.area ? <p className="mt-2 hidden text-[0.8125rem] text-body md:block">Check your pincode to continue.</p> : null}
           </div>
         </aside>
       </div>
@@ -124,8 +122,8 @@ export function CartView({ minOrderPaise }: { minOrderPaise: number }) {
           <span>Subtotal</span>
           <span className="font-medium tabular-nums">{formatPaise(subtotal)}</span>
         </div>
-        <Link href="/checkout" aria-disabled={!state.area || belowMin || undefined} className={buttonClasses("primary", "lg", true)}>
-          {state.area ? "Checkout" : "Check pincode to continue"}
+        <Link href="/checkout" aria-disabled={belowMin || undefined} className={buttonClasses("primary", "lg", true)}>
+          Checkout
         </Link>
       </div>
     </div>

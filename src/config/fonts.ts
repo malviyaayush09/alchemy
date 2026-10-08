@@ -16,7 +16,8 @@ export const fontScript = Allura({
 
 export const fontDisplay = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: "400",
+  // 500 for headings and cake names: Cormorant's 400 is too thin to read at card sizes.
+  weight: ["400", "500"],
   style: ["normal", "italic"],
   display: "swap",
   preload: false,

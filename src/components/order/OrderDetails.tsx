@@ -46,7 +46,7 @@ export function OrderDetails({ order, invoiceHref }: { order: Order; invoiceHref
               ) : null}
             </dl>
             {order.trackingUrl ? (
-              <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer nofollow" className="mt-3 inline-flex min-h-11 items-center bg-ink px-4 text-[0.8125rem] tracking-[0.12em] text-paper uppercase">
+              <a href={order.trackingUrl} target="_blank" rel="noopener noreferrer nofollow" className="mt-3 inline-flex min-h-11 items-center bg-ink px-4 text-[0.9375rem] tracking-[0.12em] text-paper uppercase">
                 Live tracking
               </a>
             ) : null}
@@ -64,8 +64,8 @@ export function OrderDetails({ order, invoiceHref }: { order: Order; invoiceHref
                   <p className="text-ink">
                     {i.quantity} × {i.productName} <span className="text-body">· {weightLabel(i.weightGrams)}</span>
                   </p>
-                  {i.cakeMessage ? <p className="text-[0.8125rem] text-body">Message on cake: “{i.cakeMessage}”</p> : null}
-                  {i.giftNote ? <p className="text-[0.8125rem] text-body">Gift note: “{i.giftNote}”</p> : null}
+                  {i.cakeMessage ? <p className="text-[0.9375rem] text-body">Message on cake: “{i.cakeMessage}”</p> : null}
+                  {i.giftNote ? <p className="text-[0.9375rem] text-body">Gift note: “{i.giftNote}”</p> : null}
                 </div>
                 <span className="shrink-0 tabular-nums text-ink">{formatPaise(i.unitPaise * i.quantity)}</span>
               </li>
@@ -79,8 +79,13 @@ export function OrderDetails({ order, invoiceHref }: { order: Order; invoiceHref
           <h2 className="eyebrow text-body">Delivery</h2>
           <p className="mt-2 font-display text-[1.25rem] text-ink">{longDate(order.deliveryDate)}</p>
           <p className="text-ink">{order.slotLabel}</p>
+          {order.isSurprise ? (
+            <p className="mt-3 border border-accent bg-paper px-3 py-2 text-[0.9375rem] text-ink">
+              Surprise for <b className="font-medium">{order.recipientName}</b>. If the rider needs directions they&apos;ll call you, and your gift note goes in a sealed envelope.
+            </p>
+          ) : null}
           <address className="mt-3 text-[0.9375rem] not-italic text-body">
-            {order.customerName}
+            {order.isSurprise && order.recipientName ? order.recipientName : order.customerName}
             <br />
             {order.addressLine1}
             {order.addressLine2 ? <>, {order.addressLine2}</> : null}
@@ -119,7 +124,7 @@ export function OrderDetails({ order, invoiceHref }: { order: Order; invoiceHref
             </div>
           </dl>
           {invoiceHref && brand.legal.gstin && order.gstRateBps > 0 ? (
-            <a href={invoiceHref} className="mt-4 inline-flex min-h-11 items-center text-[0.875rem] text-ink underline decoration-accent underline-offset-4">
+            <a href={invoiceHref} className="mt-4 inline-flex min-h-11 items-center text-[1rem] text-ink underline decoration-accent underline-offset-4">
               Download GST invoice (PDF)
             </a>
           ) : null}

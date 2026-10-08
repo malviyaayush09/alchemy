@@ -1,34 +1,38 @@
-import Link from "next/link";
-import { getProducts } from "@/lib/catalog";
+import { getProducts, getSettings } from "@/lib/catalog";
+import { pairingFor } from "@/lib/pairing";
 import { ProductCard } from "@/components/product/ProductCard";
+import { GinkgoMark } from "@/components/brand/GinkgoMark";
+import { Button } from "@/components/ui/Button";
 
+/** Photographed cakes lead, then featured ones, so the home grid always opens on real photos. */
 export async function SignatureCakes() {
-  const products = await getProducts();
-  const featured = products.filter((p) => p.isFeatured).slice(0, 4);
+  const [products, settings] = await Promise.all([getProducts(), getSettings()]);
+  const shown = [...products]
+    .sort((a, b) => Number(b.images.length > 0) - Number(a.images.length > 0) || Number(b.isFeatured) - Number(a.isFeatured) || a.sortOrder - b.sortOrder)
+    .slice(0, 8);
+
   return (
-    <section aria-labelledby="signature-title" className="py-12 lg:py-16">
+    <section aria-labelledby="cakes-title" className="py-14 lg:py-24">
       <div className="container-x">
-        <div className="flex items-end justify-between gap-4">
-          <div className="sm:flex sm:items-baseline sm:gap-4">
-            <h2 id="signature-title" className="text-[2rem] lg:text-[2.5rem]">
-              Signature Cakes
-            </h2>
-            <p className="hidden text-[0.875rem] text-body sm:block">Choose a weight and add to cart</p>
-          </div>
-          <Link
-            href="/collections"
-            className="eyebrow inline-flex min-h-11 shrink-0 items-center text-ink underline decoration-accent underline-offset-[6px]"
-          >
-            View all {products.length}
-          </Link>
-        </div>
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {featured.map((p, i) => (
+        <header className="mx-auto max-w-2xl text-center">
+          <GinkgoMark className="mx-auto size-5 text-accent" />
+          <h2 id="cakes-title" className="mt-3 text-[2.5rem] sm:text-[3rem] lg:text-[3.5rem]">
+            Our Cakes
+          </h2>
+          <p className="mt-2 text-[1.0625rem] text-body sm:text-[1.125rem]">Made to order, in 500 g and 1 kg.</p>
+        </header>
+        <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 sm:grid-cols-3 sm:gap-x-6 lg:mt-14 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-16">
+          {shown.map((p) => (
             <li key={p.slug} className="flex">
-              <ProductCard product={p} priority={i < 2} />
+              <ProductCard product={p} messageMax={settings.cakeMessageMaxChars} pairing={pairingFor(p, products)} />
             </li>
           ))}
         </ul>
+        <div className="mt-14 text-center">
+          <Button href="/collections" variant="primary" size="lg">
+            View all {products.length} cakes
+          </Button>
+        </div>
       </div>
     </section>
   );

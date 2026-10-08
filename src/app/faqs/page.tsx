@@ -43,7 +43,7 @@ export default function FaqsPage() {
                     </summary>
                     <div className="pb-5 text-[0.9375rem] text-body">
                       <p>{f.a}</p>
-                      {f.legalReview ? <p className="mt-2 text-[0.8125rem] font-medium text-detail">[LEGAL REVIEW NEEDED]</p> : null}
+                      {f.legalReview ? <p className="mt-2 text-[0.9375rem] font-medium text-detail">[LEGAL REVIEW NEEDED]</p> : null}
                     </div>
                   </details>
                 ))}

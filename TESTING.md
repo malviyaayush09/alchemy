@@ -9,14 +9,21 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 ## What we have
 
 ### Customer site
-- **Home**: brand story (chapters), featured cakes, how ordering works
-- **Collections**: all 15 cakes, filters (All / Eggless / With Egg / Pull-Up / Sugar-Free) with counts, and sorting
-- **Product page**: 500 g / 1 kg, message on cake, optional gift note card, pincode check, sticky Add to Cart bar on phones
-- **Pincode check** before the first add to cart. Only HSR Layout (560102) at launch; other pincodes get "Not yet delivering here" plus a notify-me form
+- **Home**: a hero slideshow (4 slides, changes every 4 s; pause button, dots, arrows on desktop, swipe on phones; stops while hovered), the cakes straight away, brand story (chapters), how ordering works
+- **Glimpse (quick view)**: tap a cake photo or the eye button for a pop-up with the picture, description, both sizes with prices and the cake message. Whatever you type **appears on a chocolate plaque over the cake** as a preview. One-tap message ideas fill it in
+- **Shop by occasion** (`/occasions`): Birthday, Anniversary, Congratulations, Just because, Diwali, Christmas. Each page **re-themes itself** (colours + a moving motif: confetti, petals, ribbons, ginkgo leaves, diyas, stars) and suggests messages for that occasion. Festivals appear on the home page only in season (Diwali 1 Oct–15 Nov, Christmas in December). Edit them in `src/config/occasions.ts`. Cakes tagged with an occasion's slug in admin show first
+- **Pair it**: in the Glimpse, a tick-box offers one other available cake ("Bigger celebration? Add a second cake"); the button becomes **Add both · ₹total**
+- **Dark mode**: moon icon in the header. Light is the default; the choice is remembered on that device. Occasion pages get an evening version of their own colours. Admin always stays light
+- **Send as a surprise** (needs migration `0003_delight.sql`): a tick-box at checkout asks who it's for. Admin, the kitchen sheet and the new-order email show **SURPRISE**: seal the gift note in an envelope, and the rider calls the customer, not the recipient
+- **Remind me next year** (needs `0003`): on a paid order page, pick the occasion, whose and the date. One email goes a week before the same day next year (daily job at 9 AM: `/api/cron/reminders`, scheduled in `vercel.json`, protected by `CRON_SECRET`). The email has a cancel link
+- **Cake cards**: one **Add** button (single size: straight to cart; two sizes: opens the Glimpse to choose). Cakes without a photo show a drawn **illustration** (labelled as one)
+- **Collections**: all 15 cakes, filter pills (All / Eggless / With Egg / Pull-Up / Sugar-Free) with counts, and sorting
+- **Product page**: 500 g / 1 kg with the price on each size, message on cake, optional gift note card, sticky Add to Cart bar on phones
+- **No pincode step while shopping**: Add goes straight to the cart. The pincode is part of the checkout address and is checked as you type. Only HSR Layout (560102) at launch; other pincodes get "We don't deliver to … yet" and the order can't be placed
 - **Cart**: quantities, remove, and prices re-checked with the server
 - **Checkout**: guest checkout (login never required); delivery date + time slot (full or closed slots disabled); coupon; prepaid only
 - **Order page**: live status timeline, delivery slot and rider details, reached from the confirmation or a signed link in the email
-- **Track Order**: guests enter order ID + phone
+- **Track Order** is switched off for now (bakery's request): `src/config/features.ts`. `/track-order` shows 404; the order link in emails still works
 - **Login** by phone OTP (email as fallback), and **My Account** with orders, saved addresses and profile
 - **Gift Box, About Us, FAQs, Contact, Privacy, Terms, Refund, Delivery policy** (policies are placeholders marked **[LEGAL REVIEW NEEDED]**)
 - Consent banner (analytics load only after Accept), and a WhatsApp chat button (hidden until a number is set)
@@ -59,13 +66,19 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 
 ## 1. Customer journey (most important)
 
+- [ ] On a cake card, tap the **photo** or the **eye**: the Glimpse opens. Type a message: it shows on the plaque. Tap a message idea, pick **1 kg**, **Add to cart**
+- [ ] Open **Occasions → Anniversary**: the page turns wine and rose-gold with drifting petals, and the Glimpse there suggests anniversary messages
+- [ ] Home: **Shop by occasion** shows Diwali marked "In season" (until 15 Nov)
+- [ ] In the Glimpse for a priced cake, tick **Bigger celebration?**: the button says **Add both** with the combined price, and both cakes land in the cart
+- [ ] Tap the **moon** in the header: the site turns navy; reload and it stays dark; tap again for light
+- [ ] (after running `0003`) Checkout → tick **Send it as a surprise**, enter a name. After paying, the order page says "Surprise for …" and admin shows the SURPRISE banner
+- [ ] (after running `0003`) On the paid order page, **Remind me next year** → Set reminder: "We'll email you on …". Locally, open `/api/cron/reminders` to run the daily job
 - [ ] Open a cake and choose **1 kg**: the price changes
 - [ ] Type a **message on cake** and tick **Add a gift note card**: counters count down
-- [ ] Tap **Add to cart**: "Where should we deliver?" appears
-- [ ] Enter **560001**: "Not yet delivering to 560001" plus notify-me. Submit an email: "Thank you"
-- [ ] Enter **560102**: "added to your cart", and the cart count goes up
+- [ ] Tap **Add to cart**: it goes straight into the cart (no pincode question) and the cart count goes up
 - [ ] **Cart**: + / −, remove, subtotal updates
 - [ ] **Checkout**: the phone field opens a number keypad, and inputs don't zoom on iPhone
+- [ ] In the address, type pincode **560001**: "We don't deliver to 560001 yet" and Pay is refused. Change it to **560102**: "✓ We deliver to HSR Layout"
 - [ ] Pick **today**: slots past their cutoff show "Closed for today" and can't be tapped
 - [ ] Pick **tomorrow** and a slot
 - [ ] Apply a coupon (create one in admin first): the discount shows in the total
@@ -74,8 +87,8 @@ A walkthrough of everything the site does and how to check each part. Tick the b
 
 ## 2. Tracking
 
-- [ ] `/track-order` with the order ID and a **wrong** phone: "We couldn't find an order…"
-- [ ] The same with the **right** phone: the order page opens
+- [ ] `/track-order` shows the 404 page (Track Order is switched off) and there's no Track Order link in the menu or footer
+- [ ] Open the order link from the confirmation email: the order page opens
 - [ ] Open the order link in incognito **without** the `?t=…` part: 404 (orders are private)
 
 ## 3. Account

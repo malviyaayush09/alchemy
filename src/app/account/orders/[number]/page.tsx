@@ -12,7 +12,7 @@ export default async function AccountOrderPage({ params }: { params: Promise<{ n
   if (!order || order.status === "pending_payment" || !(order.userId === user.id || (user.phone && order.phone === user.phone))) notFound();
   return (
     <>
-      <Link href="/account" className="inline-flex min-h-11 items-center text-[0.875rem] text-ink underline decoration-accent underline-offset-4">
+      <Link href="/account" className="inline-flex min-h-11 items-center text-[1rem] text-ink underline decoration-accent underline-offset-4">
         ← All orders
       </Link>
       <h2 className="mt-2 text-[1.875rem]">Order {order.orderNumber}</h2>

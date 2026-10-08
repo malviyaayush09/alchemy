@@ -14,7 +14,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect("/login?next=/admin");
   if (!isStaff(user)) notFound();
   return (
-    <div className="bg-paper-soft pb-16">
+    <div className="admin-shell bg-paper-soft pb-16">
       <AdminNav />
       <div className="container-x py-6">{children}</div>
     </div>

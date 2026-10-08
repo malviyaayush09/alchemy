@@ -30,7 +30,7 @@ export async function notifyStaffNewOrder(orderId: string) {
   if (!o) return;
   const adminUrl = `${env.siteUrl}/admin/orders/${encodeURIComponent(o.orderNumber)}`;
   const where = `${o.addressLine1}${o.addressLine2 ? `, ${o.addressLine2}` : ""}${o.landmark ? ` (${o.landmark})` : ""}, ${o.areaName} ${o.pincode}`;
-  const subject = `New order ${o.orderNumber} · ${longDate(o.deliveryDate)}, ${o.slotLabel} · ${inr(o.totalPaise)}`;
+  const subject = `${o.isSurprise ? "SURPRISE · " : ""}New order ${o.orderNumber} · ${longDate(o.deliveryDate)}, ${o.slotLabel} · ${inr(o.totalPaise)}`;
 
   const text = [
     `New paid order for ${brand.name}.`,
@@ -44,6 +44,7 @@ export async function notifyStaffNewOrder(orderId: string) {
         (i.giftNote ? `\n   Gift note: "${i.giftNote}"` : ""),
     ),
     "",
+    ...(o.isSurprise ? [`SURPRISE for ${o.recipientName ?? "someone"}: seal the gift note in an envelope; rider calls the customer, not the recipient`] : []),
     `Customer: ${o.customerName}, ${displayPhone(o.phone)}`,
     `Address: ${where}`,
     `Total paid: ${inr(o.totalPaise)}${o.couponCode ? ` (coupon ${o.couponCode})` : ""}`,
@@ -64,6 +65,7 @@ export async function notifyStaffNewOrder(orderId: string) {
 <p style="font-size:18px;margin:0 0 12px"><b>New order ${esc(o.orderNumber)}</b> · ${esc(inr(o.totalPaise))}</p>
 <p style="margin:0 0 12px"><b>Delivery:</b> ${esc(longDate(o.deliveryDate))}, ${esc(o.slotLabel)}</p>
 <ul style="padding-left:18px;margin:0 0 12px">${items}</ul>
+${o.isSurprise ? `<p style="margin:0 0 12px;padding:8px 10px;border:2px solid #222"><b>SURPRISE</b> for ${esc(o.recipientName ?? "someone")}: seal the gift note in an envelope; the rider calls the customer, not the recipient.</p>` : ""}
 <p style="margin:0 0 4px"><b>Customer:</b> ${esc(o.customerName)}, <a href="tel:${o.phone}">${esc(displayPhone(o.phone))}</a></p>
 <p style="margin:0 0 12px"><b>Address:</b> ${esc(where)}</p>
 <p><a href="${adminUrl}" style="background:${brand.colors.ink};color:#ffffff;padding:10px 16px;text-decoration:none">Open in admin</a></p></div>`;

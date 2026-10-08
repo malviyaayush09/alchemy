@@ -20,8 +20,8 @@ export function AddressForm({ defaultName, defaultPhone }: { defaultName: string
       <TextField id="a-line2" name="line2" label="Street and sector (optional)" autoComplete="address-line2" />
       <TextField id="a-landmark" name="landmark" label="Landmark (optional)" />
       <TextField id="a-pin" name="pincode" label="Pincode" inputMode="numeric" pattern="[0-9]{6}" maxLength={6} autoComplete="postal-code" required />
-      {state?.error ? <p role="alert" className="text-[0.875rem] text-danger">{state.error}</p> : null}
-      {state?.ok ? <p role="status" className="text-[0.875rem] text-ink">Address saved.</p> : null}
+      {state?.error ? <p role="alert" className="text-[1rem] text-danger">{state.error}</p> : null}
+      {state?.ok ? <p role="status" className="text-[1rem] text-ink">Address saved.</p> : null}
       <button type="submit" disabled={pending} className={buttonClasses("primary", "md", true)}>
         {pending ? "Saving…" : "Save address"}
       </button>

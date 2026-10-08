@@ -30,13 +30,13 @@ export default function StyleguidePage() {
           {swatches.map(([name, hex]) => (
             <li key={name} className="border border-line">
               <span className="block h-20" style={{ background: hex }} />
-              <span className="block p-2 text-[0.8125rem]">
+              <span className="block p-2 text-[0.9375rem]">
                 <b className="font-medium text-ink">{name}</b> {hex}
               </span>
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-[0.875rem]">Accent (gold) on paper is 2.1:1: display/decoration only. Body text on paper uses body (6.6:1) or ink (13.2:1).</p>
+        <p className="mt-3 text-[1rem]">Accent (gold) on paper is 2.1:1: display/decoration only. Body text on paper uses body (6.6:1) or ink (13.2:1).</p>
       </Section>
 
       <Section title="Typography">

@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 export function Placeholder({ children, tone = "paper" }: { children: ReactNode; tone?: "paper" | "ink" }) {
   return (
     <span
-      className={`inline-block border border-dashed px-1.5 font-sans text-[0.8125rem] ${
+      className={`inline-block border border-dashed px-1.5 font-sans text-[0.9375rem] ${
         tone === "ink" ? "border-accent/70 text-accent" : "border-detail text-body"
       }`}
     >

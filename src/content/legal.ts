@@ -21,6 +21,8 @@ export const legalDocs: Record<string, LegalDoc> = {
           "To fulfil an order we collect your name, mobile number, email address and delivery address, plus the cake details and any message or gift note you add.",
           "If you create an account, we store your phone number or email so you can sign in with a one-time code.",
           "If you ask to be notified when we deliver to your area, we store your pincode and the phone or email you give us.",
+          "If you send a cake as a surprise, we store the recipient's name and, if you give it, their mobile number, only to deliver that order.",
+          "If you ask us to remind you next year, we store the occasion, the date and the name you give, and send one email a week before. Every reminder email has a link to cancel it.",
         ],
       },
       {
@@ -63,7 +65,7 @@ export const legalDocs: Record<string, LegalDoc> = {
     title: "Shipping & Delivery Policy",
     summary: `How delivery works in ${deliveryAreaLabel}.`,
     sections: [
-      { heading: "Where we deliver", body: [`Only in ${deliveryAreaLabel}, to pincodes shown as serviceable when you check your pincode.`] },
+      { heading: "Where we deliver", body: [`Only in ${deliveryAreaLabel}, to pincodes accepted at checkout.`] },
       {
         heading: "Dates and slots",
         body: [

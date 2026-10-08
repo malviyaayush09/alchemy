@@ -13,7 +13,7 @@ export function Badge({ tag, label }: { tag: string; label?: string }) {
   const isDiet = tag === "eggless" || tag === "egg";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 border px-2 py-0.5 font-sans text-[0.75rem] font-medium uppercase leading-5 tracking-[0.12em] ${styles[tag] ?? "border-line text-body"}`}
+      className={`inline-flex items-center gap-1.5 border px-2 py-0.5 font-sans text-[0.8125rem] font-medium uppercase leading-6 tracking-[0.12em] ${styles[tag] ?? "border-line text-body"}`}
     >
       {isDiet ? (
         <span aria-hidden="true" className="grid size-2.5 place-items-center border border-current">

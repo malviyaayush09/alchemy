@@ -16,18 +16,18 @@ const variants: Record<ButtonVariant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm: "min-h-11 px-4 text-[0.75rem]",
-  md: "min-h-12 px-6 text-[0.8125rem]",
-  lg: "min-h-13 px-8 text-[0.8125rem]",
+  sm: "min-h-12 px-5 text-[0.875rem]",
+  md: "min-h-13 px-7 text-[0.9375rem]",
+  lg: "min-h-14 px-9 text-[1rem]",
 };
 
 export function buttonClasses(variant: ButtonVariant = "primary", size: Size = "md", full = false) {
   const isLink = variant === "link" || variant === "link-light";
   return [
-    "inline-flex items-center justify-center gap-2 font-sans font-medium uppercase tracking-[0.16em] transition-colors duration-200",
+    "inline-flex items-center justify-center gap-2 font-sans font-medium uppercase tracking-[0.12em] transition-colors duration-200",
     "disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50",
     variants[variant],
-    isLink ? "min-h-11 px-0 text-[0.75rem]" : sizes[size],
+    isLink ? "min-h-11 px-0 text-[0.9375rem]" : sizes[size],
     full ? "w-full" : "",
   ].join(" ");
 }

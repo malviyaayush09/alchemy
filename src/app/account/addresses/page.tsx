@@ -19,9 +19,9 @@ export default async function AddressesPage() {
             {list.map((a) => (
               <li key={a.id} className="border border-line bg-paper-soft p-4">
                 <p className="font-medium text-ink">
-                  {a.label || "Address"} {a.is_default ? <span className="ml-1 text-[0.75rem] uppercase tracking-[0.1em] text-body">· Default</span> : null}
+                  {a.label || "Address"} {a.is_default ? <span className="ml-1 text-[0.8125rem] uppercase tracking-[0.1em] text-body">· Default</span> : null}
                 </p>
-                <address className="mt-1 text-[0.875rem] not-italic text-body">
+                <address className="mt-1 text-[1rem] not-italic text-body">
                   {a.name}, {displayPhone(a.phone)}
                   <br />
                   {a.line1}
@@ -32,12 +32,12 @@ export default async function AddressesPage() {
                   {!a.is_default ? (
                     <form action={makeDefaultAddress}>
                       <input type="hidden" name="id" value={a.id} />
-                      <button className="min-h-11 text-[0.8125rem] text-ink underline underline-offset-4">Make default</button>
+                      <button className="min-h-11 text-[0.9375rem] text-ink underline underline-offset-4">Make default</button>
                     </form>
                   ) : null}
                   <form action={deleteAddress}>
                     <input type="hidden" name="id" value={a.id} />
-                    <button className="min-h-11 text-[0.8125rem] text-danger underline underline-offset-4">Delete</button>
+                    <button className="min-h-11 text-[0.9375rem] text-danger underline underline-offset-4">Delete</button>
                   </form>
                 </div>
               </li>

@@ -2,14 +2,19 @@ import Link from "next/link";
 import { primaryNav } from "@/config/navigation";
 import { Logo } from "@/components/brand/Logo";
 import { CartCount } from "@/components/cart/CartCount";
-import { BagIcon } from "@/components/ui/Icons";
+import { BagIcon, UserIcon } from "@/components/ui/Icons";
 import { MobileMenu } from "./MobileMenu";
+import { ThemeToggle } from "./ThemeToggle";
 
+/** Boutique header: centred wordmark, icons right, the menu on its own row on desktop. */
 export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper">
-      <div className="container-x flex h-16 items-center gap-2 lg:h-[4.5rem]">
-        <MobileMenu />
+      <div className="container-x grid h-16 grid-cols-[1fr_auto_1fr] items-center lg:h-20">
+        <div className="flex items-center">
+          <MobileMenu />
+        </div>
+
         <span className="lg:hidden">
           <Logo size="sm" />
         </span>
@@ -17,34 +22,33 @@ export function Header() {
           <Logo size="md" />
         </span>
 
-        <nav aria-label="Primary" className="mx-auto hidden lg:block">
-          <ul className="flex items-center gap-7 xl:gap-9">
-            {primaryNav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="inline-flex min-h-11 items-center text-[0.875rem] tracking-[0.04em] text-ink underline-offset-[6px] hover:underline hover:decoration-accent"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <Link href="/account" className="ml-auto hidden min-h-11 items-center px-3 text-[0.875rem] text-ink hover:underline hover:decoration-accent lg:inline-flex">
-          Account
-        </Link>
-        <Link
-          href="/cart"
-          className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-2 bg-ink px-3 text-paper hover:bg-ink-soft lg:ml-0 lg:px-5"
-        >
-          <BagIcon className="size-[1.125rem]" />
-          <span className="eyebrow hidden !text-[0.75rem] lg:inline">Cart ·</span>
-          <span className="sr-only lg:hidden">Cart,</span>
-          <CartCount />
-        </Link>
+        <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+          <ThemeToggle />
+          <Link href="/account" className="hidden size-11 items-center justify-center text-ink hover:text-detail sm:inline-flex" aria-label="My account">
+            <UserIcon />
+          </Link>
+          <Link href="/cart" className="relative -mr-2 inline-flex size-11 items-center justify-center text-ink hover:text-detail">
+            <BagIcon className="size-6" />
+            <span className="sr-only">Cart,</span>
+            <CartCount />
+          </Link>
+        </div>
       </div>
+
+      <nav aria-label="Primary" className="hidden border-t border-line/70 lg:block">
+        <ul className="container-x flex items-center justify-center gap-10 xl:gap-14">
+          {primaryNav.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="inline-flex min-h-12 items-center text-[0.9375rem] tracking-[0.06em] text-ink underline-offset-[8px] hover:underline hover:decoration-accent"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </header>
   );
 }

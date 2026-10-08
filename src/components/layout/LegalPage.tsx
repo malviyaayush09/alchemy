@@ -6,7 +6,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
     <>
       <PageHeader crumb={doc.title} title={doc.title} intro={doc.summary} />
       <div className="container-x max-w-3xl py-8 lg:py-12">
-        <p role="note" className="border border-dashed border-detail bg-paper-soft px-4 py-3 text-[0.875rem] font-medium text-ink">
+        <p role="note" className="border border-dashed border-detail bg-paper-soft px-4 py-3 text-[1rem] font-medium text-ink">
           [LEGAL REVIEW NEEDED] This is placeholder text and has not been reviewed by a lawyer. It must be replaced or approved before launch.
         </p>
         <div className="mt-8 space-y-8">
