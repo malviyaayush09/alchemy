@@ -28,7 +28,7 @@ export default async function CancelReminderPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader crumb="Reminder" title={done ? "Reminder cancelled" : "Cancel this reminder?"} intro={done ? "We won't email you about it again." : valid ? "We'll stop the email we were going to send you before your celebration." : "This link isn't valid any more."} />
+      <PageHeader crumb="Reminder" title={done ? "Reminder cancelled" : valid ? "Cancel this reminder?" : "Link not valid"} intro={done ? "We won't email you about it again." : valid ? "We'll stop the email we were going to send you before your celebration." : "This link isn't valid any more."} />
       <div className="container-x py-10 text-center">
         {!done && valid ? (
           <form action={cancel}>
