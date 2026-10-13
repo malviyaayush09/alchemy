@@ -1,7 +1,7 @@
 import { brand, deliveryAreaLabel } from "@/config/brand";
 
 /** Section label for the story; a concept word, not the brand name. */
-export const storyEyebrow = "The Alchemy";
+export const storyEyebrow = "The Craft";
 
 /**
  * Home hero slideshow. Photos are INTERIM (see src/data/catalog.ts): rights
@@ -52,41 +52,41 @@ export const orderingSteps = [
   { no: "3", title: "Delivered", body: `To your door in ${deliveryAreaLabel}.` },
 ];
 
-/** The Codex chapters (story lives on Home and About only). Deliberately free of ingredient claims. */
+/** The story in four chapters, told as an artist's process (Home only). Deliberately free of ingredient claims. */
 export const chapters = [
   {
     numeral: "I",
-    title: "The Pod",
-    body: "It begins with cacao, bitter and raw, still in its shell.",
-    art: "Engraving · Cacao pod, split open",
+    title: "The Sketch",
+    body: "Every cake begins as an idea: a shape, a colour, a feeling worth capturing.",
+    art: "Engraving · A pencil sketch of a cake",
   },
   {
     numeral: "II",
-    title: "The Measure",
-    body: "Every element weighed with care, nothing left to chance.",
-    art: "Engraving · Brass scales",
+    title: "The Palette",
+    body: "Flavours chosen the way a painter chooses colours, each one for a reason.",
+    art: "Engraving · A painter's palette",
   },
   {
     numeral: "III",
-    title: "The Fire",
-    body: "Heat, patience and a steady hand turn it glossy and smooth.",
-    art: "Engraving · Copper pot over a low flame",
+    title: "The Hand",
+    body: "Patience and a steady hand turn the idea into form, one layer at a time.",
+    art: "Engraving · Hands at work with a palette knife",
   },
   {
     numeral: "IV",
-    title: "The Cake",
+    title: "The Piece",
     body: `${brand.heroLine} ${brand.tagline}`,
-    art: "Engraving · Finished cake beneath a glass dome",
+    art: "Engraving · A finished cake on a stand",
   },
 ];
 
 export const splitFeatures = [
   {
-    eyebrow: "The Alchemy",
+    eyebrow: "The Craft",
     title: brand.storyLine,
     body: brand.belief,
     cta: { href: "/about", label: "Our story", variant: "link" as const },
-    art: "Engraving · The alchemist at his bench",
+    art: "Engraving · The artist at the easel",
     image: "/images/interim/truffle.jpg",
   },
   {

@@ -1,4 +1,4 @@
-# Storefront (working name: Alchemy Patisserie)
+# Artista Cakes storefront
 
 Made-to-order cake shop for HSR Layout, Bengaluru. Next.js (App Router) + TypeScript + Tailwind, Supabase Postgres + Storage, Razorpay (**test mode only**), Resend, Vercel.
 
@@ -57,7 +57,7 @@ GST invoice PDFs (`/api/invoices/<order>`) appear only when `brand.legal.gstin` 
 - **Kitchen sheet:** Admin → Kitchen. One day at a time, grouped by slot, with a prep list and each cake's message in large type. *Print* gives a clean paper copy.
 - **Backups:** `npm run db:backup` exports every table to `backups/<timestamp>/` (gitignored: it contains customer data). Schedule it nightly on Windows (run once in **Command Prompt**, not PowerShell, from this folder):
   ```
-  schtasks /Create /SC DAILY /ST 02:00 /TN "Alchemy DB backup" /TR "cmd /c cd /d %CD% && npm run db:backup"
+  schtasks /Create /SC DAILY /ST 02:00 /TN "Artista DB backup" /TR "cmd /c cd /d %CD% && npm run db:backup"
   ```
   Product photos in Supabase Storage aren't included. For production, Supabase Pro's daily backups are the safer option.
 - **Dev tools are locked off in production.** The simulated payment, on-screen OTP and test-error route are refused on Vercel production and on any public `https` `SITE_URL`, even if `ENABLE_DEV_TOOLS=1` is set by mistake. Only orders created without Razorpay keys can ever be "simulated".

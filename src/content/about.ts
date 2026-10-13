@@ -1,8 +1,9 @@
 import { brand } from "@/config/brand";
 
 /**
- * Brand story, adapted from the client's storyboard ("alchemy story board.pdf").
- * Keep it free of ingredient, sourcing, allergen or health claims.
+ * Brand story, told around artistry (rewritten for the final name; the
+ * original storyboard was built on an "alchemy" idea). Keep it free of
+ * ingredient, sourcing, allergen, health or history claims.
  */
 /**
  * Sister-brand lineage (same owner as the brand in config). Original wording:
@@ -20,7 +21,7 @@ export const family = brand.family
       beats: [
         { title: "The mentor", body: `Learning beside Chef ${brand.family.shortName}, in a kitchen where patience came before everything.` },
         { title: "The café", body: `${brand.family.name}, built as a tribute to that way of working.` },
-        { title: "The patisserie", body: `${brand.shortName}: the same care, given entirely to made-to-order cakes.` },
+        { title: "The cake studio", body: `${brand.shortName}: the same care, given entirely to made-to-order cakes.` },
       ],
       link: { href: brand.family.storyUrl, label: `Read the ${brand.family.shortName} story` },
     }
@@ -29,28 +30,28 @@ export const family = brand.family
 export const about = {
   eyebrow: "Our story",
   title: brand.belief,
-  intro: "There was a time when chocolate wasn't confection. It was ritual.",
+  intro: "There was a time when a cake wasn't just baked. It was composed.",
 
   sections: [
     {
       id: "house",
-      eyebrow: "The Alchemist House",
-      title: "Crafted, studied and elevated.",
+      eyebrow: "The Atelier",
+      title: "Imagined, composed and finished with care.",
       body: [
-        "On the old trade routes between South America, Arabia and India, cacao was treated like gold: rare, powerful and transformative.",
-        "It wasn't consumed casually. It was crafted, studied and elevated. This is where our house begins.",
+        "A great cake starts the way a painting does: with an idea, a sketch and a sense of what it should make you feel.",
+        "Ours are made to order, for one table and one moment at a time. This is where our house begins.",
       ],
-      art: "Engraving · The alchemist at his bench",
+      art: "Engraving · The artist at the easel",
     },
     {
       id: "origin",
-      eyebrow: "The Origin",
-      title: "Luxury is not created. It is transformed.",
+      eyebrow: "The Idea",
+      title: "A cake is not decorated. It is composed.",
       body: [
-        "The house was founded on a single belief. Like an alchemist turning base metal into gold, we take cacao, textures and flavours and transmute them into experiences.",
-        "Not desserts. Not products. Objects of indulgence.",
+        "The house was founded on a single belief: that a cake can be a work of art. Like an artist at the easel, we take shape, colour, texture and flavour and compose them into something worth remembering.",
+        "Not desserts. Not products. Edible works of art.",
       ],
-      art: "Engraving · Cacao branch with pods",
+      art: "Engraving · A sketchbook open on a cake drawing",
     },
   ],
 
@@ -58,23 +59,23 @@ export const about = {
     eyebrow: "The Philosophy",
     title: "Every creation follows three principles.",
     items: [
-      { title: "Transformation", body: "Ordinary beginnings become extraordinary forms." },
-      { title: "Balance", body: "Sweetness, bitterness and texture held in harmony." },
-      { title: "Obsession", body: "Nothing leaves the atelier until it feels complete." },
+      { title: "Vision", body: "Every cake starts with an idea worth making." },
+      { title: "Balance", body: "Flavour, texture and form held in harmony." },
+      { title: "Finish", body: "Nothing leaves the studio until it feels complete." },
     ],
-    closing: "This is not baking. This is craft under discipline.",
+    closing: "This is not baking. This is art, made with discipline.",
   },
 
   experience: {
     eyebrow: "The Experience",
     title: "It reveals itself slowly.",
-    items: ["In the weight of the box.", "In the finish of the chocolate.", "In the aftertaste that lingers longer than expected."],
+    items: ["In the first look, before the first slice.", "In the finish of every surface.", "In the flavour that stays with you after the last bite."],
     closing: "Every piece is designed to feel like a discovery, not a purchase.",
-    art: "Engraving · Brass scales",
+    art: "Engraving · Brushes and a palette knife",
   },
 
   positioning: {
-    quote: "This is not dessert. This is alchemy.",
-    body: "Not a cake shop. Not a chocolate store. A house where indulgence is studied, refined and elevated.",
+    quote: "This is not dessert. This is art.",
+    body: "Not a cake shop. A studio where cakes are imagined, composed and finished.",
   },
 };

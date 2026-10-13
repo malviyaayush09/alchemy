@@ -24,18 +24,18 @@ type Contact = { whatsapp: string; phone: string; email: string; address: string
 type Legal = { legalName: string; gstin: string; fssaiLicence: string };
 
 export const brand = {
-  name: "Alchemy Patisserie",
+  name: "Artista Cakes",
   /** Used where space is tight (browser tab suffix, order prefixes). */
-  shortName: "Alchemy",
+  shortName: "Artista",
   tagline: "Crafted with intention. Savored forever.",
-  heroLine: "Chocolate, transformed.",
-  storyLine: "From raw to remarkable.",
-  belief: "Born from the belief that indulgence can be transformed.",
+  heroLine: "Every cake, a canvas.",
+  storyLine: "From sketch to centrepiece.",
+  belief: "Born from the belief that a cake can be a work of art.",
 
   logo: {
     /** Script wordmark (Allura) and small-caps subline, used until a logo file exists. */
-    wordmark: "Alchemy",
-    subline: "Patisserie",
+    wordmark: "Artista",
+    subline: "Cakes",
     /** Set to e.g. { src: "/brand/logo.svg", width: 180, height: 48 } to switch to an image logo. */
     image: null as null | { src: string; width: number; height: number },
   },
@@ -77,8 +77,8 @@ export const brand = {
     fssaiLicence: "",
   } as Legal,
 
-  /** Prefix for human-readable order numbers, e.g. ALC-000123. */
-  orderPrefix: "ALC",
+  /** Prefix for human-readable order numbers, e.g. ART-001234. Orders placed before the rename keep ALC-. */
+  orderPrefix: "ART",
 } as const;
 
 export const deliveryAreaLabel = `${brand.delivery.area}, ${brand.delivery.city}`;

@@ -4,7 +4,7 @@ import { GinkgoMark } from "./GinkgoMark";
 type Shape = "arch" | "rect" | "circle";
 
 type Props = {
-  /** Caption shown on the placeholder, e.g. "Engraving · Cacao pod, split open". */
+  /** Caption shown on the placeholder, e.g. "Engraving · A painter's palette". */
   label: string;
   shape?: Shape;
   tone?: "paper" | "ink";

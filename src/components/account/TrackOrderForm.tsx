@@ -1,5 +1,6 @@
 "use client";
 
+import { brand } from "@/config/brand";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { buttonClasses } from "@/components/ui/Button";
@@ -30,7 +31,7 @@ export function TrackOrderForm() {
         <label htmlFor="t-order" className="block text-[1rem] font-medium text-ink">
           Order ID
         </label>
-        <input id="t-order" className={`${input} uppercase`} value={orderNumber} onChange={(e) => setOrderNumber(e.target.value.toUpperCase())} placeholder="e.g. ALC-001001" autoCapitalize="characters" autoComplete="off" required />
+        <input id="t-order" className={`${input} uppercase`} value={orderNumber} onChange={(e) => setOrderNumber(e.target.value.toUpperCase())} placeholder={`e.g. ${brand.orderPrefix}-001001`} autoCapitalize="characters" autoComplete="off" required />
       </div>
       <div className="space-y-1.5">
         <label htmlFor="t-phone" className="block text-[1rem] font-medium text-ink">
